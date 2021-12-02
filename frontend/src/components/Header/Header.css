@@ -1,0 +1,45 @@
+.mainNavigation {
+    display: flex;
+    justify-content: space-between;
+}
+
+.logo-head {
+    height: 8vh;
+    margin-top: 20px;
+    margin-left: 5vw;
+    filter: hue-rotate(400deg);
+}
+
+.mainNavigation ul {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.mainNavigation ul li {
+    margin-top: 1rem;
+    margin-right: 3vw;
+    list-style: none;
+    min-width: 130px;
+}
+
+.mainNavigation ul li a {
+    padding: 0.6rem 1rem;
+    border-bottom: 0px solid rgb(119, 57, 57);
+    border-radius: 4px;
+    color: rgb(119, 57, 57);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: all .1s;
+}
+
+.mainNavigation ul li a:hover {
+    padding: 0.5rem 1rem 0.4rem 1rem;
+    transition: all .1s;
+    border-bottom: 5px solid rgb(119, 57, 57);
+    border-radius: 4px;
+    color: rgb(119, 57, 57);
+    font-weight: bold;
+    text-decoration: none;
+    text-transform: uppercase;
+}
