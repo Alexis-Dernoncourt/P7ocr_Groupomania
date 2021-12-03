@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import './DeleteBtn.css';
 
 
-function DeleteConfirmBtn({user, setUser, setShowDeleteBtn}) {
+const DeleteConfirmBtn = ({user, setUser, setShowDeleteBtn, setInfoMessage}) => {
 
     const navigate = useNavigate();
 
@@ -11,14 +11,15 @@ function DeleteConfirmBtn({user, setUser, setShowDeleteBtn}) {
     };
 
     const deleteOk = () => {
-        console.log('delete the user now', user);
-        fetch(`http://localhost:4000/api/auth/profile-delete/${user.id}1110`, {
+        fetch(`http://localhost:4000/api/auth/profile-delete/${user.id}`, {
             headers: {
                 'Authorization': localStorage.getItem('token') && localStorage.getItem('token')
             },
             method: 'DELETE'
         })
-        .then(() => {
+        .then(data => data.json())
+        .then((response) => {
+            setInfoMessage(response.message);
             setUser();
             localStorage.removeItem('token');
             navigate("/login");

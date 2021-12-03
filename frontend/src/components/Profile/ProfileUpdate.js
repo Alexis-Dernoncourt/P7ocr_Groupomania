@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import '../SignupForm/SignupForm.css';
 import './Profile.css';
 
-function ProfileUpdate() {
+const ProfileUpdate = ({ setInfoMessage }) => {
     const navigate = useNavigate();
     const [user, setUser] = useState({});
     const [firstnameValue, setFirstnameValue] = useState("");
@@ -54,7 +54,9 @@ function ProfileUpdate() {
             method: "PUT",
             body: new FormData(form)
         })
-        .then(() => {
+        .then(data => data.json())
+        .then((response) => {
+            setInfoMessage(response.message);
             navigate("/profile");
         })
         .catch(error => {

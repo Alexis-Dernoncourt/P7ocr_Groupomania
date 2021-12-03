@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import '../Profile/Profile.css';
 
-function Home() {
+const Home = () => {
     const [data, setData] = useState(null);
 
     const token = localStorage.getItem('token');

@@ -2,7 +2,7 @@ import {Link} from 'react-router-dom';
 import Logo from '../../assets/images/logos/icon-left-font.png'
 import './Header.css';
 
-function Navbar() {
+const Navbar = () => {
     return (
         <div className="mainNavigation">
             <div>

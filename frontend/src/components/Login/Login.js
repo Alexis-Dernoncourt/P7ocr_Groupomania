@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import LoginForm from '../LoginForm/LoginForm';
 
-function Login() {
+const Login = ({ infoMessage, setInfoMessage }) => {
 
     useEffect(() => {
         document.title = 'Groupomania - Connexion';
@@ -9,7 +9,7 @@ function Login() {
 
     return (
         <div>
-            < LoginForm />
+            < LoginForm infoMessage={infoMessage} setInfoMessage={setInfoMessage} />
         </div>
     )
 }

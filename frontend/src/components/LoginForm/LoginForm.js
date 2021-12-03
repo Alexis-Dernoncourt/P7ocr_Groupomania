@@ -3,11 +3,19 @@ import {Link} from 'react-router-dom';
 import { Formik } from 'formik';
 import '../SignupForm/SignupForm.css';
 
-function LoginForm() {
+const LoginForm = ({ infoMessage, setInfoMessage }) => {
     const navigate = useNavigate();
+
+    if(infoMessage) {
+        setTimeout(() => {
+            setInfoMessage(null);
+        }, 5000);
+    }
+
 
     return (
         <div>
+            {infoMessage && <div className="infoMessage"><p>{infoMessage}</p></div>}
             <Formik
                 initialValues={{ email: '', password: '' }}
                 validate={values => {
@@ -35,6 +43,7 @@ function LoginForm() {
                     })
                     .then(data => data.json())
                     .then(response => {
+                        setInfoMessage(response.message);
                         localStorage.setItem('token', `Bearer ${response.token}`);
                         setSubmitting(false);
                         resetForm();
@@ -96,7 +105,7 @@ function LoginForm() {
                             </button>
                         </div>
                         <div className="loginLink">
-                            <Link to="/signup">+ Je veux créer un compte pour me connecter</Link>
+                            <Link to="/signup">+ Je veux créer un compte</Link>
                         </div>
                       </div>
                     </form>

@@ -10,13 +10,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // DB CONNEXION
-db.sequelize.sync();
-// try {
-//     db.sequelize.authenticate();
-//     console.log('Connection to the DB has been established successfully.');
-// } catch (error) {
-//     console.error('Unable to connect to the database:', error);
-// }
+try {
+    db.sequelize.sync()
+    .then(() => {
+        console.log('Connection to the DB has been established successfully.');
+    })
+    .catch(error => {
+        console.log('Unable to connect to the database:', error.parent.sqlMessage, '. Please verify and retry...');
+    })
+    //db.sequelize.authenticate();
+} catch (error) {
+    console.error('Unable to connect to the database:', error);
+}
 
 
 app.use((_, res, next) => {

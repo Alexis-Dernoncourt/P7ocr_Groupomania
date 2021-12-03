@@ -13,7 +13,10 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-            isAlpha: {msg: 'Le prénom doit être une chaîne de cartères alphanumériques (les chiffres et caractères spéciaux ne sont pas autoriés).'},
+            is: {
+                args: [/^[a-z- _àâäëêéèçûüôö]+$/i],
+                msg: 'Uniquement des caractères - avec espace(s) et/ou tiret(s) (les chiffres et caractères spéciaux ne sont pas autoriés)'
+            },
             notEmpty: {msg: 'Ce champs ne doit pas être vide.'},
             notNull: {msg: 'Ce champs est requis.'},
             min: {
@@ -30,7 +33,10 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-            isAlpha: {msg: 'Le prénom doit être une chaîne de cartères alphanumériques (les chiffres et caractères spéciaux ne sont pas autoriés).'},
+            is: {
+                args: [/^[a-z- _àâäëêéèçûüôö]+$/i],
+                msg: 'Uniquement des caractères - avec espace(s) et/ou tiret(s) (les chiffres et caractères spéciaux ne sont pas autoriés)'
+            },
             notEmpty: {msg: 'Ce champs ne doit pas être vide.'},
             notNull: {msg: 'Ce champs est requis.'},
             min: {
@@ -64,10 +70,7 @@ module.exports = (sequelize) => {
     },
     photo: {
         type: DataTypes.STRING,
-        defaultValue: "http://localhost:4000/images/base-avatar.png",
-        validate: {
-            isURL: {msg: 'Ce champs doit contenir une adresse URL valide.'}
-        }
+        defaultValue: "http://localhost:4000/images/base-avatar.png"
     },
     role: {
         type: DataTypes.STRING,

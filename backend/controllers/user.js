@@ -22,13 +22,12 @@ exports.signup = (req, res) => {
             }
             return User.create(user)
             .then(() => {
-                res.status(201).json({ message: `Utilisateur créé ! Vous pouvez maintenant vous connecter!` })
+                res.status(201).json({ message: `Utilisateur créé ! Vous pouvez maintenant vous connecter` })
             })
-            //.catch(error => res.status(500).json({ error }));
         })
         .catch(error => {
             if (error instanceof ValidationError) {
-                return res.status(400).json({message: error.message, data: error})
+                return res.status(400).json({message: error.message})
             }
             res.status(500).json({ error, data: error })
         });
@@ -44,12 +43,12 @@ exports.login = (req, res) => {
         User.findOne({ where: { email: mail } })
         .then(user => {
             if (!user) {
-            return res.status(401).json({ error: 'Utilisateur non trouvé !' });
+            return res.status(401).json({ message: `Utilisateur non trouvé! Vérifiez vos informations ou créez un compte.` });
             }
             bcrypt.compare(pwd, user.password)
             .then(valid => {
                 if (!valid) {
-                    return res.status(401).json({ error: 'Mot de passe incorrect !' });
+                    return res.status(401).json({ message: 'Mot de passe incorrect !' });
                 }
                 const token = jwt.sign(
                     { userId: user.id },
@@ -58,14 +57,14 @@ exports.login = (req, res) => {
                 );
                 return res.setHeader('Authorization', `Bearer ${token}`).status(200).json({
                     userId: user.id,
-                    token
+                    token,
+                    message: `Hello ${user.firstName} !`
                 });
             })
         })
-        .catch(error => res.status(500).json({ error }));
+        .catch(error => res.status(500).json({ message: error.message }));
     } else {
-        const message = 'Mot de passe ou email erroné, veuillez vérifier puis réessayer.';
-        res.status(401).json({ message });
+        res.status(401).json({ message: 'Mot de passe ou email erroné, veuillez vérifier puis réessayer.' });
     }
 };
 
@@ -74,11 +73,11 @@ exports.getProfile = (req, res) => {
     User.findOne({ where: { id: userId } })
     .then(user => {
         if (!user) {
-            return res.status(401).json({ error: 'Utilisateur non trouvé !' });
+            return res.status(401).json({ message: 'Utilisateur non trouvé! /nVérifiez vos informations ou créez un compte.' });
         }
         res.status(200).json({ user });
     })
-    .catch(error => res.status(500).json({ error }));
+    .catch(error => res.status(500).json({ error, message: 'Il y a eu une erreur, réessayez plus tard.' }));
 };
 
 exports.updateProfile = (req, res) => {
@@ -90,7 +89,7 @@ exports.updateProfile = (req, res) => {
             User.findOne({ where: { id: id } })
             .then(user => {
                 if (!user) {
-                    return res.status(401).json({ error: 'Utilisateur non trouvé !' });
+                    return res.status(401).json({ message: 'Utilisateur non trouvé ! \nVérifiez vos informations ou créez un compte.' });
                 }
                 const currentPhoto = user.photo.split('/images/')[1];
                 const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
@@ -100,19 +99,19 @@ exports.updateProfile = (req, res) => {
                         .then(() => {
                             res.status(200).json({ message: 'Votre profil a bien été modifié' });
                         })
-                        .catch(error => res.status(401).json({ error }));
+                        .catch(error => res.status(401).json({ message: error.message }));
                     })
                 } else {
                     User.update({...req.body, photo: imageUrl, updatedAt: Date.now()}, { where: { id: id } })
                     .then(() => {
                         res.status(200).json({ message: 'Votre profil a bien été modifié' });
                     })
-                    .catch(error => res.status(401).json({ error }));
+                    .catch(error => res.status(401).json({ message: error.message }));
                 }
             })
             .catch(error => {
                 if (error instanceof ValidationError) {
-                    return res.status(400).json({message: error.message, data: error})
+                    return res.status(400).json({message: error.message})
                 }
                 res.status(500).json({ error });
             });
@@ -124,21 +123,21 @@ exports.updateProfile = (req, res) => {
                 User.findByPk(id)
                 .then(user => {
                     if (!user) {
-                        return res.status(401).json({ error: 'Utilisateur non trouvé !' });
+                        return res.status(401).json({ message: 'Utilisateur non trouvé! Vérifiez vos informations ou créez un compte.' });
                     }
-                    res.status(200).json({ user });
+                    res.status(200).json({ message: 'Votre profil a bien été modifié' });
                 })
             })
             .catch(error => {
                 if (error instanceof ValidationError) {
-                    return res.status(400).json({message: error.message, data: error})
+                    return res.status(400).json({message: error.message})
                 }
                 res.status(500).json({ error });
             });
         }
     }
     else {
-        res.status(401).json({ message: 'Vous n\'êtes pas autorisé à effectuer cette action.' });
+        res.status(401).json({ message: 'Vous n\'êtes pas autorisé(e) à effectuer cette action.' });
     }
 };
 
@@ -149,7 +148,7 @@ exports.deleteProfile = (req, res) => {
         User.findByPk(id)
         .then(user => {
             if (!user) {
-                return res.status(401).json({ error: 'Utilisateur non trouvé !' });
+                return res.status(401).json({ message: 'Utilisateur non trouvé! Vérifiez vos informations ou créez un compte.' });
             }
             const currentPhoto = user.photo.split('/images/')[1];
             if (currentPhoto !== "base-avatar.png") {
@@ -172,7 +171,7 @@ exports.deleteProfile = (req, res) => {
     }
 }
 
-exports.home = (req, res) => {
+exports.home = (_, res) => {
     User.findAll()
     .then(users => {
         res.status(200).json({ users });
