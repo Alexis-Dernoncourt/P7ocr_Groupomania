@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
+import LogoutBtn from '../Profile/LogoutBtn';
 import '../Profile/Profile.css';
 
-const Home = () => {
+const Home = ({ setInfoMessage }) => {
     const [data, setData] = useState(null);
 
     const token = localStorage.getItem('token');
@@ -24,6 +25,7 @@ const Home = () => {
     return (
         <div className="mtmb-2rem">
             <h2>HOME</h2>
+            { data && <div className="alignLeft"><LogoutBtn setInfoMessage={setInfoMessage} /></div> }
             {
                 !data ? "Loading..." :
                 data.map(el => {

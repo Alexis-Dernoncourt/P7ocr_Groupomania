@@ -121,3 +121,15 @@
     z-index: 100;
 }
 
+.alignLeft {
+    display: flex;
+    margin-left: 3vw;
+    justify-content: flex-start;
+}
+
+.alignLeft > button {
+    position: fixed;
+    top: 70px;
+    left: 7vw;
+}
+

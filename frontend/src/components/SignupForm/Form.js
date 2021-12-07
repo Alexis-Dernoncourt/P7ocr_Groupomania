@@ -10,9 +10,6 @@ const Form = ({ values, errors, touched, handleChange, handleBlur, handleSubmit,
                       <div className="formContainer">
                       <h2>Inscription</h2>
                         <div className="inputContainer">
-                            {/* <div className="labelContainer">
-                                <label htmlFor="firstname">Prénom</label>
-                            </div> */}
                                 <input
                                     type="text"
                                     name="firstname"
@@ -26,9 +23,6 @@ const Form = ({ values, errors, touched, handleChange, handleBlur, handleSubmit,
                         </div>
                         
                         <div className="inputContainer">
-                            {/* <div className="labelContainer">
-                                <label htmlFor="lastname">Nom</label>
-                            </div> */}
                                 <input
                                     type="text"
                                     name="lastname"
@@ -42,9 +36,6 @@ const Form = ({ values, errors, touched, handleChange, handleBlur, handleSubmit,
                         </div>
                         
                         <div className="inputContainer">
-                            {/* <div className="labelContainer">
-                                <label htmlFor="email">Email</label>
-                            </div> */}
                                 <input
                                     type="email"
                                     name="email"
@@ -58,9 +49,6 @@ const Form = ({ values, errors, touched, handleChange, handleBlur, handleSubmit,
                         </div>
 
                         <div className="inputContainer">
-                            {/* <div className="labelContainer">
-                                <label htmlFor="pwd">Mot de passe</label>
-                            </div> */}
                                 <input
                                     type="password"
                                     name="password"
@@ -75,9 +63,6 @@ const Form = ({ values, errors, touched, handleChange, handleBlur, handleSubmit,
                         </div>
                         
                         <div className="inputContainer">
-                            {/* <div className="labelContainer">
-                                <label htmlFor="pwdConfirm">Confirmation du mot de passe</label>
-                            </div> */}
                                 <input
                                     type="password"
                                     name="passwordConfirmation"

@@ -1,8 +1,8 @@
 const bcrypt = require('bcrypt');
 const db = require('../models/db');
 const User = db.users;
-const Op = db.Sequelize.Op;
-const { ValidationError } = require('sequelize');
+//const Op = db.Sequelize.Op;
+const { ValidationError, UniqueConstraintError } = require('sequelize');
 const jwt = require('jsonwebtoken');
 const match = require('../utils/regex');
 const fs = require('fs');
@@ -27,6 +27,9 @@ exports.signup = (req, res) => {
         })
         .catch(error => {
             if (error instanceof ValidationError) {
+                if (error instanceof UniqueConstraintError) {
+                    return res.status(401).json({ message: `L'email est déjà utilisé. Créez un compte avec une autre adresse mail ou connectez-vous` })
+                }
                 return res.status(400).json({message: error.message})
             }
             res.status(500).json({ error, data: error })
@@ -71,9 +74,10 @@ exports.login = (req, res) => {
 exports.getProfile = (req, res) => {
     const userId = req.token.userId;
     User.findOne({ where: { id: userId } })
+    // récupérer uniquement les éléments utiles (ex: pas le password)
     .then(user => {
         if (!user) {
-            return res.status(401).json({ message: 'Utilisateur non trouvé! /nVérifiez vos informations ou créez un compte.' });
+            return res.status(401).json({ message: 'Utilisateur non trouvé ! Vérifiez vos informations ou créez un compte.' });
         }
         res.status(200).json({ user });
     })
@@ -89,7 +93,7 @@ exports.updateProfile = (req, res) => {
             User.findOne({ where: { id: id } })
             .then(user => {
                 if (!user) {
-                    return res.status(401).json({ message: 'Utilisateur non trouvé ! \nVérifiez vos informations ou créez un compte.' });
+                    return res.status(401).json({ message: 'Utilisateur non trouvé ! Vérifiez vos informations ou créez un compte.' });
                 }
                 const currentPhoto = user.photo.split('/images/')[1];
                 const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;

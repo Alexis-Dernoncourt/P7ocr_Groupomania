@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from "react-router-dom";
 import '../SignupForm/SignupForm.css';
 import './Profile.css';
@@ -11,17 +11,22 @@ const ProfileUpdate = ({ setInfoMessage }) => {
     const [imageValue, setImageValue] = useState("");
     const [selectedImage, setSelectedImage] = useState();
 
-    const imageChange = (e) => {
-        setImageValue(e.target.value);
-        if (e.target.files && e.target.files.length > 0) {
-          setSelectedImage(e.target.files[0]);
+    const imageInput = useRef("");
+
+    const formRef = useRef({});
+
+    const imageChange = () => {
+        setImageValue(formRef.current[1].value);
+        
+        if (formRef.current[1].files && formRef.current[1].files.length > 0) {
+          setSelectedImage(formRef.current[1].files[0]);
         }
     };
 
     const removeSelectedImage = () => {
         setSelectedImage();
         setImageValue();
-        document.getElementById('image').value = "";
+        imageInput.current.value = "";
     };
 
     useEffect(() => {
@@ -45,7 +50,7 @@ const ProfileUpdate = ({ setInfoMessage }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const form = document.getElementById('form');
+        const form = formRef.current;
 
         fetch(`http://localhost:4000/api/auth/profile-update/${user.id}`, {
             headers: {
@@ -69,7 +74,7 @@ const ProfileUpdate = ({ setInfoMessage }) => {
         <div className="profileInfoContainer alignItemsCenter">
             {user.photo && <img className="profilePicture" src={user.photo} alt="profile" />}
 
-            <form onSubmit={handleSubmit} id="form" className="width40vw" encType="multipart/form-data">
+            <form onSubmit={handleSubmit} id="form" ref={formRef} className="width40vw" encType="multipart/form-data">
                 <div className="formContainer formContainer-profileUpdate">
                     <h2>Modifier votre profil :</h2>
                     <div className="inputContainer">
@@ -95,7 +100,8 @@ const ProfileUpdate = ({ setInfoMessage }) => {
                                 type="file"
                                 name="image"
                                 id="image"
-                                accept=".jpg,.jpeg.,.gif,.png"
+                                ref={imageInput}
+                                accept=".jpg,.jpeg,.png"
                                 onChange={imageChange}
                             />
                             {

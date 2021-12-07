@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import DeleteConfirmBtn from './DeleteConfirmBtn';
+import LogoutBtn from './LogoutBtn';
 import './Profile.css';
 
 const Profile = ({ infoMessage, setInfoMessage }) => {
-    const navigate = useNavigate();
+    
     const [user, setUser] = useState(null);
     const [showDeleteBtn, setShowDeleteBtn] = useState(false);
 
@@ -23,11 +24,6 @@ const Profile = ({ infoMessage, setInfoMessage }) => {
         .catch(console.log('erreur'))
     }, []);
 
-    const handleClick = () => {
-        setInfoMessage('Vous êtes déconnecté');
-        localStorage.removeItem('token');
-        navigate("/login");
-    };
 
     const handleDelete = () => {
         setShowDeleteBtn(true);
@@ -45,7 +41,7 @@ const Profile = ({ infoMessage, setInfoMessage }) => {
             {infoMessage && <div className="infoMessage"><p>{infoMessage}</p></div>}
             <div className="profileContainer">
                 {
-                    !user ? "Veuillez vous connecter.." :
+                    !user ? <p>"Veuillez vous connecter.."</p> :
                     (
                         <div className="contentDiv">
                             <div className="profileInfoContainer">
@@ -57,7 +53,7 @@ const Profile = ({ infoMessage, setInfoMessage }) => {
                                 </div>
                             </div>
                             {showDeleteBtn && <DeleteConfirmBtn user={user} setUser={setUser} setShowDeleteBtn={setShowDeleteBtn} setInfoMessage={setInfoMessage} />}
-                            <button onClick={handleClick} className="logoutBtn">Me déconnecter</button>
+                            <LogoutBtn setInfoMessage={setInfoMessage} />
                             <button onClick={handleDelete} className="logoutBtn deleteBtn">Supprimer mon profil</button>
                         </div>
                     )
