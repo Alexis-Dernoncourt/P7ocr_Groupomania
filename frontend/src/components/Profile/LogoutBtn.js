@@ -1,12 +1,16 @@
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 
 const LogoutBtn = ({ setInfoMessage }) => {
 
     const navigate = useNavigate();
+    const {setAuth} = useContext(AuthContext);
 
     const handleClick = () => {
         setInfoMessage('Vous êtes déconnecté');
         localStorage.removeItem('token');
+        setAuth(false);
         navigate("/login");
     };
 
@@ -15,4 +19,4 @@ const LogoutBtn = ({ setInfoMessage }) => {
     )
 }
 
-export default LogoutBtn
+export default LogoutBtn;

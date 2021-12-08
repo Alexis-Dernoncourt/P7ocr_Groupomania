@@ -8,21 +8,27 @@ import Home from './components/Home/Home';
 import RedirectToLogin from './components/Home/RedirectToLogin';
 import Profile from './components/Profile/Profile';
 import ProfileUpdate from './components/Profile/ProfileUpdate';
+import AuthContextProvider from './context/AuthContext';
+import ProtectedRoutes from './ProtectedRoutes';
 
 function App() {
   const [ infoMessage, setInfoMessage ] = useState(null);
 
   return (
     <div className="App">
-      <Header />
-      <Routes>
-        <Route path="/home" element={<Home setInfoMessage={setInfoMessage} />} />
-        <Route path="/signup" element={<Signup setInfoMessage={setInfoMessage}/>} />
-        <Route path="/login" element={<Login infoMessage={infoMessage} setInfoMessage={setInfoMessage} />} />
-        <Route path="/profile" element={<Profile infoMessage={infoMessage} setInfoMessage={setInfoMessage} />} />
-        <Route path="/profile-update" element={<ProfileUpdate setInfoMessage={setInfoMessage} />} />
-        <Route path="*" element={<RedirectToLogin />} />
-      </Routes>
+      <AuthContextProvider>
+        <Header />
+        <Routes>
+          <Route path="/signup" element={<Signup setInfoMessage={setInfoMessage}/>} />
+          <Route path="/login" element={<Login infoMessage={infoMessage} setInfoMessage={setInfoMessage} />} />
+          <Route element={<ProtectedRoutes />}>
+            <Route path="/home" element={<Home setInfoMessage={setInfoMessage} />} />
+            <Route path="/profile" element={<Profile infoMessage={infoMessage} setInfoMessage={setInfoMessage} />} />
+            <Route path="/profile-update" element={<ProfileUpdate setInfoMessage={setInfoMessage} />} />
+          </Route>
+          <Route path="*" element={<RedirectToLogin />} />
+        </Routes>
+      </AuthContextProvider>
     </div>
   );
 }

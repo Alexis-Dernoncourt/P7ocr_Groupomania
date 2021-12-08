@@ -71,7 +71,7 @@ input:focus {
     font-size: 1rem;
     text-transform: uppercase;
     font-weight: bold;
-    background-color: sienna;
+    background-color: rgb(218, 121, 100);
     color: #fff;
     box-shadow: darkgrey 0px 2px 7px;
     cursor: pointer;
@@ -100,20 +100,6 @@ input:focus {
     font-weight: bold;
     text-decoration: underline;
     color: rgb(12, 76, 129);
-}
-
-.infoMessage {
-    width: max-content;
-    font-size: 1.3rem;
-    text-align: center;
-    padding: .9rem 1.2rem;
-    border-radius: 8px;
-    background-color: rgb(155, 207, 196);
-    position: absolute;
-    top: 10vh;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 100;
 }
 
 @media screen and (max-width: 700px) {

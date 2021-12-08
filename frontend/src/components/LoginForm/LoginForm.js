@@ -1,9 +1,14 @@
-import { useNavigate } from "react-router-dom";
-import {Link} from 'react-router-dom';
+import { useEffect, useContext } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { Formik } from 'formik';
 import '../SignupForm/SignupForm.css';
+import { AuthContext } from "../../context/AuthContext";
 
 const LoginForm = ({ infoMessage, setInfoMessage }) => {
+
+    const {auth, setAuth} = useContext(AuthContext);
+    console.log(auth);
+
     const navigate = useNavigate();
 
     if(infoMessage) {
@@ -11,6 +16,14 @@ const LoginForm = ({ infoMessage, setInfoMessage }) => {
             setInfoMessage(null);
         }, 5000);
     }
+
+    useEffect(() => {
+        if(auth) {
+            navigate('/home');
+        }
+    }, [auth, navigate]);
+
+    
 
 
     return (
@@ -33,7 +46,7 @@ const LoginForm = ({ infoMessage, setInfoMessage }) => {
                 }}
 
                 onSubmit={(values, { setSubmitting, resetForm }) => {
-                    fetch("http://localhost:4000/api/auth/login", {
+                    fetch("/api/auth/login", {
                         headers: {
                             'Accept': 'application/json',
                             'Content-Type': 'application/json'
@@ -43,11 +56,19 @@ const LoginForm = ({ infoMessage, setInfoMessage }) => {
                     })
                     .then(data => data.json())
                     .then(response => {
-                        setInfoMessage(response.message);
-                        localStorage.setItem('token', `Bearer ${response.token}`);
-                        setSubmitting(false);
-                        resetForm();
-                        navigate("/profile");
+                        if(response.status && response.status === 'error') {
+                            setInfoMessage(response.message);
+                            setSubmitting(false);
+                        } else {
+                            setInfoMessage(response.message);
+                            localStorage.setItem('token', `Bearer ${response.token}`);
+                            setSubmitting(false);
+                            resetForm();
+                            if(!auth) {
+                                setAuth(true);
+                                navigate("/profile");
+                            }
+                        }
                     })
                     .catch(error => {
                         console.log(error);

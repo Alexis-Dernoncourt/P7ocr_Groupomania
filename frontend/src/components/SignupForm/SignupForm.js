@@ -1,10 +1,20 @@
+import { useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Formik } from 'formik';
 import Form from "./Form";
 import './SignupForm.css';
+import { AuthContext } from "../../context/AuthContext";
 
 const SignupForm = ({ setInfoMessage }) => {
+
+    const {auth} = useContext(AuthContext);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if(auth) {
+            navigate('/home');
+        }
+    }, [auth, navigate]);
 
     return (
         <div>
@@ -34,7 +44,7 @@ const SignupForm = ({ setInfoMessage }) => {
                 }}
 
                 onSubmit={(values, { setSubmitting, resetForm }) => {
-                    fetch("http://localhost:4000/api/auth/signup", {
+                    fetch("/api/auth/signup", {
                         headers: {
                             'Accept': 'application/json',
                             'Content-Type': 'application/json'

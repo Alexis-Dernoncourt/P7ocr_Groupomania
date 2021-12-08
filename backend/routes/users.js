@@ -5,7 +5,7 @@ const upload = require('../middlewares/multer-config');
 
 const userCtrl = require('../controllers/user');
 
-router.get('/login', auth, userCtrl.home);
+router.get('/home', auth, userCtrl.home);
 router.get('/profile', auth, userCtrl.getProfile);
 router.get('/profile-update', auth, userCtrl.getProfile);
 router.put('/profile-update/:id', auth, upload.single('image'), userCtrl.updateProfile);

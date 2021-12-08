@@ -12,7 +12,7 @@ const Home = ({ setInfoMessage }) => {
     }, []);
 
     useEffect(() => {
-        fetch("http://localhost:4000/api/auth/login", {
+        fetch("/api/auth/home", {
             headers: {
                 'Authorization': token
             }
@@ -27,7 +27,7 @@ const Home = ({ setInfoMessage }) => {
             <h2>HOME</h2>
             { data && <div className="alignLeft"><LogoutBtn setInfoMessage={setInfoMessage} /></div> }
             {
-                !data ? "Loading..." :
+                !data ? "Chargement... Assurez-vous d'être bien connecté(e)." :
                 data.map(el => {
                     return  <div className="profileInfoContainer" key={`${el.firstName}-${el.id}`}>
                                 <div className="profileInfoContainer alignItemsCenter mt-2rem cardHome">

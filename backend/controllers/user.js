@@ -46,12 +46,12 @@ exports.login = (req, res) => {
         User.findOne({ where: { email: mail } })
         .then(user => {
             if (!user) {
-            return res.status(401).json({ message: `Utilisateur non trouvé! Vérifiez vos informations ou créez un compte.` });
+            return res.status(401).json({ status: 'error', message: `Utilisateur non trouvé! Vérifiez vos informations ou créez un compte.` });
             }
             bcrypt.compare(pwd, user.password)
             .then(valid => {
                 if (!valid) {
-                    return res.status(401).json({ message: 'Mot de passe incorrect !' });
+                    return res.status(401).json({ status: 'error', message: 'Mot de passe incorrect !' });
                 }
                 const token = jwt.sign(
                     { userId: user.id },
@@ -65,16 +65,16 @@ exports.login = (req, res) => {
                 });
             })
         })
-        .catch(error => res.status(500).json({ message: error.message }));
+        .catch(error => res.status(500).json({ status: 'error', message: error.message }));
     } else {
-        res.status(401).json({ message: 'Mot de passe ou email erroné, veuillez vérifier puis réessayer.' });
+        res.status(401).json({ status: 'error', message: 'Mot de passe ou email erroné, veuillez vérifier puis réessayer.' });
     }
 };
 
 exports.getProfile = (req, res) => {
     const userId = req.token.userId;
-    User.findOne({ where: { id: userId } })
-    // récupérer uniquement les éléments utiles (ex: pas le password)
+    // récupère uniquement les éléments utiles (pas le password)
+    User.findOne({attributes: ['id', 'firstName', 'lastName', 'email', 'photo', 'role', 'createdAt', 'updatedAt'], where: { id: userId } })
     .then(user => {
         if (!user) {
             return res.status(401).json({ message: 'Utilisateur non trouvé ! Vérifiez vos informations ou créez un compte.' });
@@ -176,7 +176,7 @@ exports.deleteProfile = (req, res) => {
 }
 
 exports.home = (_, res) => {
-    User.findAll()
+    User.findAll({attributes: ['id', 'firstName', 'lastName', 'email', 'photo', 'role', 'createdAt', 'updatedAt']})
     .then(users => {
         res.status(200).json({ users });
     })

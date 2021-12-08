@@ -14,7 +14,7 @@ const Profile = ({ infoMessage, setInfoMessage }) => {
     }, []);
 
     useEffect(() => {
-        fetch("http://localhost:4000/api/auth/profile", {
+        fetch("/api/auth/profile", {
             headers: {
                 'Authorization': localStorage.getItem('token') && localStorage.getItem('token')
             }

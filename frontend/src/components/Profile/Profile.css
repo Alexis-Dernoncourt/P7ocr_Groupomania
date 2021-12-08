@@ -107,20 +107,6 @@
     transform: translate(-50%, -50%);
 }
 
-.infoMessage {
-    width: max-content;
-    font-size: 1.3rem;
-    text-align: center;
-    padding: .2rem 1.5rem;
-    border-radius: 8px;
-    background-color: rgb(155, 207, 196);
-    position: absolute;
-    top: 10vh;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 100;
-}
-
 .alignLeft {
     display: flex;
     margin-left: 3vw;

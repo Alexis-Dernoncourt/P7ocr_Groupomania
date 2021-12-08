@@ -11,7 +11,7 @@ const DeleteConfirmBtn = ({user, setUser, setShowDeleteBtn, setInfoMessage}) => 
     };
 
     const deleteOk = () => {
-        fetch(`http://localhost:4000/api/auth/profile-delete/${user.id}`, {
+        fetch(`/api/auth/profile-delete/${user.id}`, {
             headers: {
                 'Authorization': localStorage.getItem('token') && localStorage.getItem('token')
             },
