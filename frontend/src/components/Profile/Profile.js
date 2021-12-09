@@ -29,7 +29,7 @@ const Profile = ({ infoMessage, setInfoMessage }) => {
         setShowDeleteBtn(true);
     };
 
-    if(infoMessage) {
+    if (infoMessage) {
         setTimeout(() => {
             setInfoMessage(null);
         }, 5000);

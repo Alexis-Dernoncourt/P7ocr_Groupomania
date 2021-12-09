@@ -21,6 +21,7 @@ function App() {
         <Routes>
           <Route path="/signup" element={<Signup setInfoMessage={setInfoMessage}/>} />
           <Route path="/login" element={<Login infoMessage={infoMessage} setInfoMessage={setInfoMessage} />} />
+          {/* <Route path="/posts" element={} /> */}
           <Route element={<ProtectedRoutes />}>
             <Route path="/home" element={<Home setInfoMessage={setInfoMessage} />} />
             <Route path="/profile" element={<Profile infoMessage={infoMessage} setInfoMessage={setInfoMessage} />} />

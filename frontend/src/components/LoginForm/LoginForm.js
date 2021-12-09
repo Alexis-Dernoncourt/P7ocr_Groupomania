@@ -3,27 +3,66 @@ import { useNavigate, Link } from "react-router-dom";
 import { Formik } from 'formik';
 import '../SignupForm/SignupForm.css';
 import { AuthContext } from "../../context/AuthContext";
+import match from '../../utils/regex';
 
 const LoginForm = ({ infoMessage, setInfoMessage }) => {
 
     const {auth, setAuth} = useContext(AuthContext);
-    console.log(auth);
-
     const navigate = useNavigate();
 
-    if(infoMessage) {
+    if (infoMessage) {
         setTimeout(() => {
             setInfoMessage(null);
         }, 5000);
-    }
+    };
 
     useEffect(() => {
-        if(auth) {
+        if (auth) {
             navigate('/home');
         }
     }, [auth, navigate]);
 
-    
+    const fetchOnSubmit = (values, { setSubmitting, resetForm }) => {
+        fetch("/api/auth/login", {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "POST",
+            body: JSON.stringify(values)
+        })
+        .then(data => data.json())
+        .then(response => {
+            if (response.status && response.status === 'error') {
+                setInfoMessage(response.message);
+                setSubmitting(false);
+            } else {
+                setInfoMessage(response.message);
+                localStorage.setItem('token', `Bearer ${response.token}`);
+                setSubmitting(false);
+                resetForm();
+                if (!auth) {
+                    setAuth(true);
+                    navigate("/profile");
+                }
+            }
+        })
+        .catch(() => {
+            setInfoMessage('Une erreur est survenue. Veuillez vérifier vos information puis réessayer.');
+        })
+    };
+
+    const checkErrors = (values, errors) => {
+        if (!values.email) {
+            errors.email = 'Veuillez renseigner votre email';
+        } else if (!values.password) {
+            errors.password = 'Veuillez renseigner votre mot de passe';
+        } else if (!match.regex.mailCheck.test(values.email)) {
+            errors.email = 'Adresse email invalide';
+        } else if (!match.regex.passwordCheck.test(values.password)) {
+            errors.password = 'Invalide. *Au moins 8 caractères comprenants 1 chiffre, une majuscule et 1 caractère spécial.';
+        }
+    };
 
 
     return (
@@ -33,46 +72,12 @@ const LoginForm = ({ infoMessage, setInfoMessage }) => {
                 initialValues={{ email: '', password: '' }}
                 validate={values => {
                     const errors = {};
-                    if (!values.email) {
-                        errors.email = 'Veuillez renseigner votre email';
-                    } else if (!values.password) {
-                        errors.password = 'Veuillez renseigner votre mot de passe';
-                    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
-                        errors.email = 'Adresse email invalide';
-                    } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!#$%&()+,-./:;=?@[\]^_`{|}~])[A-Za-z0-9!#$%&()+,-./:;=?@[\]^_`{|}~]{8,}$/.test(values.password)) {
-                        errors.password = 'Invalide. *Au moins 8 caractères comprenants 1 chiffre, une majuscule et 1 caractère spécial.';
-                    }
+                    checkErrors(values, errors);
                     return errors;
                 }}
 
                 onSubmit={(values, { setSubmitting, resetForm }) => {
-                    fetch("/api/auth/login", {
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        method: "POST",
-                        body: JSON.stringify(values)
-                    })
-                    .then(data => data.json())
-                    .then(response => {
-                        if(response.status && response.status === 'error') {
-                            setInfoMessage(response.message);
-                            setSubmitting(false);
-                        } else {
-                            setInfoMessage(response.message);
-                            localStorage.setItem('token', `Bearer ${response.token}`);
-                            setSubmitting(false);
-                            resetForm();
-                            if(!auth) {
-                                setAuth(true);
-                                navigate("/profile");
-                            }
-                        }
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    })
+                    fetchOnSubmit(values, { setSubmitting, resetForm });
                 }}
                 >
 
@@ -85,7 +90,6 @@ const LoginForm = ({ infoMessage, setInfoMessage }) => {
                     handleSubmit,
                     isValid,
                     isSubmitting
-                    /* and other goodies */
 
                 }) => (
                     <form onSubmit={handleSubmit} method="POST">

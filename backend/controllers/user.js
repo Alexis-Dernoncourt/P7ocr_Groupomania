@@ -97,7 +97,7 @@ exports.updateProfile = (req, res) => {
                 }
                 const currentPhoto = user.photo.split('/images/')[1];
                 const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
-                if(currentPhoto !== "base-avatar.png") {
+                if (currentPhoto !== "base-avatar.png") {
                     fs.unlink(`images/${currentPhoto}`, () => {
                         User.update({...req.body, photo: imageUrl, updatedAt: Date.now()}, { where: { id: id } })
                         .then(() => {
