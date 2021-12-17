@@ -1,5 +1,4 @@
 const { DataTypes } = require('sequelize');
-const { posts } = require('./db');
 
 module.exports = (sequelize) => {
 
@@ -16,15 +15,30 @@ module.exports = (sequelize) => {
             allowNull: true,
             validate: {
                 is: {
-                    args: [/^[0-9a-z- _-àâäëêéèçûüôö.,;:'"&?!]+$/i],
+                    args: [/^[0-9a-z- _-àâäëêéèçûüôö.,;:)'"&?!]*$/i],
                     msg: 'Uniquement des caractères et des chiffres, avec espace(s) et/ou tiret(s) (sauf \', ", &, ?, et !, les caractères spéciaux ne sont pas autoriés)'
+                },
+                not: {
+                    args: [/^select$|^get$|^delete$|script|put1|putain|putin|pute|fdp|pd|^ducon$|con$|conne$|^connasse$|garce|^batar|bâtard|^encul|enkul|enqul|^salau|^bite$|^cul|couille|^chier$|dugland|glandu/i],
+                    msg: 'Votre message contient des insultes ou mot(s) interdit(s), veuillez le corriger...'
                 }
             }
         },
 
         media: {
             type: DataTypes.STRING,
-            allowNull: true
+            allowNull: true,
+            validate: {
+                not: {
+                    args: [/^select$|^get$|^delete$|script|put1|putain|putin|pute|fdp|pd|^ducon$|con$|conne$|^connasse$|garce|^batar|bâtard|^encul|enkul|enqul|^salau|^bite$|^cul|couille|^chier$|dugland|glandu/i],
+                    msg: 'Votre message contient des insultes ou mot(s) interdit(s), veuillez le corriger...'
+                }
+            }
+        },
+
+        signaled: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
         },
 
         moderated: {

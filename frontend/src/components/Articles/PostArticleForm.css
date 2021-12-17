@@ -1,0 +1,31 @@
+.modal-content-perso {
+    min-width: 80vw !important;
+    height: 100vh !important;
+}
+
+.formContainer {
+    margin-top: unset !important;
+}
+
+.textarea-message {
+    width: 90%;
+    border: none;
+    border-radius: 8px;
+}
+
+.img-publication {
+    width: 60%;
+    height: auto;
+    object-fit: cover;
+}
+
+.wrap-text {
+    overflow: hidden;
+}
+
+.article-image-to-modify {
+    max-width: 50vw;
+    max-height: 30vh;
+    height: auto;
+    object-fit: cover;
+}

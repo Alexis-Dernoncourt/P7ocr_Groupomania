@@ -18,7 +18,7 @@ const LoginForm = ({ infoMessage, setInfoMessage }) => {
 
     useEffect(() => {
         if (auth) {
-            navigate('/home');
+            navigate('/profile');
         }
     }, [auth, navigate]);
 
@@ -39,6 +39,7 @@ const LoginForm = ({ infoMessage, setInfoMessage }) => {
             } else {
                 setInfoMessage(response.message);
                 localStorage.setItem('token', `Bearer ${response.token}`);
+                localStorage.setItem('user_id', response.userId);
                 setSubmitting(false);
                 resetForm();
                 if (!auth) {
@@ -61,81 +62,86 @@ const LoginForm = ({ infoMessage, setInfoMessage }) => {
             errors.email = 'Adresse email invalide';
         } else if (!match.regex.passwordCheck.test(values.password)) {
             errors.password = 'Invalide. *Au moins 8 caractères comprenants 1 chiffre, une majuscule et 1 caractère spécial.';
+        } else if (match.regex.wordsFilter.test(values.email) || match.regex.wordsFilter.test(values.password)) {
+            errors.info = 'Un des champ comporte une insulte ou un mot interdit. Veuillez corriger pour continuer.';
         }
     };
 
 
     return (
-        <div>
-            {infoMessage && <div className="infoMessage"><p>{infoMessage}</p></div>}
-            <Formik
-                initialValues={{ email: '', password: '' }}
-                validate={values => {
-                    const errors = {};
-                    checkErrors(values, errors);
-                    return errors;
-                }}
+        <div className='columns is-centered mx-0'>
+        {infoMessage && <div className="infoMessage"><p>{infoMessage}</p></div>}
+        <Formik
+            initialValues={{ email: '', password: '', info: '' }}
+            validate={values => {
+                const errors = {};
+                checkErrors(values, errors);
+                return errors;
+            }}
 
-                onSubmit={(values, { setSubmitting, resetForm }) => {
-                    fetchOnSubmit(values, { setSubmitting, resetForm });
-                }}
-                >
+            onSubmit={(values, { setSubmitting, resetForm }) => {
+                fetchOnSubmit(values, { setSubmitting, resetForm });
+            }}
+            >
 
-                {({
-                    values,
-                    errors,
-                    touched,
-                    handleChange,
-                    handleBlur,
-                    handleSubmit,
-                    isValid,
-                    isSubmitting
+            {({
+                values,
+                errors,
+                touched,
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                isValid,
+                isSubmitting
 
-                }) => (
-                    <form onSubmit={handleSubmit} method="POST">
-                      <div className="formContainer">
-                      <h2>Connexion</h2>
+            }) => (
+                <div className="formContainer column is-three-fifths-desktop is-three-quarters-tablet has-text-centered px-0">
+                    <form className='field' onSubmit={handleSubmit} method="POST">
+                        <h2 className="title is-2 mx-auto my-6">Connexion</h2>
                         
-                        <div className="inputContainer">
-                                <input
-                                    type="email"
-                                    name="email"
-                                    id="email"
-                                    placeholder="Email"
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    value={values.email}
-                                />
-                            <span className={errors.email ? 'errorMsg' : ''}>{errors.email && touched.email && errors.email}</span>
+                        <div className="field">
+                            <div className="my-4 mx-auto control">
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        placeholder="Email"
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        value={values.email}
+                                    />
+                                <span className={errors.email ? 'block help is-size-6-desktop errorMsg' : ''}>{errors.email && touched.email && errors.email}</span>
+                            </div>
                         </div>
 
-                        <div className="inputContainer">
-                                <input
-                                    type="password"
-                                    name="password"
-                                    id="pwd"
-                                    placeholder="Mot de passe"
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    value={values.password}
-                                    className={errors.password && 'errorInput'}
-                                />
-                            <span className={errors.password ? 'errorMsg' : ''}>{errors.password && touched.password && errors.password}</span>
+                        <div className="field">
+                            <div className="my-4 mx-auto control">
+                                    <input
+                                        type="password"
+                                        name="password"
+                                        placeholder="Mot de passe"
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        value={values.password}
+                                        className={errors.password && 'errorInput'}
+                                    />
+                                <span className={errors.password ? 'block help is-size-6-desktop errorMsg' : ''}>{errors.password && touched.password && errors.password}</span>
+                            </div>
                         </div>
                         
 
-                        <div>
-                            <button className="btn" type="submit" disabled={!isValid || isSubmitting}>
+                        <div className="mx-auto">
+                            <span className={errors.info ? 'block help is-size-6-desktop errorMsg' : ''}>{errors.info && errors.info}</span>
+                            <button className="button is-primary is-rounded is-medium my-4" type="submit" disabled={!isValid || isSubmitting}>
                                 Me connecter
                             </button>
                         </div>
-                        <div className="loginLink">
-                            <Link to="/signup">+ Je veux créer un compte</Link>
+                        <div className="mx-auto mt-5">
+                            <Link to="/signup" className="has-text-link has-text-weight-semibold">+ Je veux créer un compte</Link>
                         </div>
-                      </div>
                     </form>
-                )}
-            </Formik>
+                </div>
+            )}
+        </Formik>
         </div>
     )
 }

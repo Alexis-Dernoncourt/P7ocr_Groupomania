@@ -8,8 +8,8 @@ const Signup = ({ setInfoMessage }) => {
     }, []);
 
     return (
-        <div>
-            < SignupForm setInfoMessage={setInfoMessage} />
+        <div className="container">
+            <SignupForm setInfoMessage={setInfoMessage} />
         </div>
     )
 }

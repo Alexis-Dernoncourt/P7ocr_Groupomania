@@ -41,6 +41,8 @@ const SignupForm = ({ setInfoMessage }) => {
     const checkErrors = (values, errors) => {
         if (!values.firstname) {
             errors.firstname = 'Veuillez renseigner votre prénom';
+        } else if (match.regex.wordsFilter.test(values.firstname) || match.regex.wordsFilter.test(values.lastname) || match.regex.wordsFilter.test(values.email) || match.regex.wordsFilter.test(values.password)) {
+            errors.info = 'Un des champ comporte une insulte ou un mot interdit. Veuillez corriger pour continuer.';
         } else if (!values.lastname) {
             errors.lastname = 'Veuillez renseigner votre nom';
         } else if (!values.email) {
@@ -60,9 +62,9 @@ const SignupForm = ({ setInfoMessage }) => {
     };
 
     return (
-        <div>
+        <div className='columns is-centered mx-0'>
             <Formik
-                initialValues={{ firstname: '', lastname: '', email: '', password: '', passwordConfirmation: '' }}
+                initialValues={{ firstname: '', lastname: '', email: '', password: '', passwordConfirmation: '', info:'' }}
                 validate={values => {
                     const errors = {};
                     checkErrors(values, errors);
@@ -86,17 +88,17 @@ const SignupForm = ({ setInfoMessage }) => {
                     /* and other goodies */
 
                 }) => (
-                    
-                    <Form   values={values}
-                            errors={errors}
-                            touched={touched}
-                            handleChange={handleChange}
-                            handleBlur={handleBlur}
-                            handleSubmit={handleSubmit}
-                            isValid={isValid}
-                            isSubmitting={isSubmitting}
-                    />
-
+                    <div className="column is-three-fifths-desktop is-three-quarters-tablet has-text-centered px-0">
+                        <Form   values={values}
+                                errors={errors}
+                                touched={touched}
+                                handleChange={handleChange}
+                                handleBlur={handleBlur}
+                                handleSubmit={handleSubmit}
+                                isValid={isValid}
+                                isSubmitting={isSubmitting}
+                        />
+                    </div>
                 )}
             </Formik>
         </div>

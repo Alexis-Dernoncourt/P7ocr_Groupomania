@@ -5,86 +5,91 @@ const Form = ({ values, errors, touched, handleChange, handleBlur, handleSubmit,
 
 
     return (
-        <div>
+        <div className="formContainer">
             <form onSubmit={handleSubmit} method="POST">
-                      <div className="formContainer">
-                      <h2>Inscription</h2>
-                        <div className="inputContainer">
+                    <h2 className='title is-2 mx-auto my-6'>Inscription</h2>
+
+                    <div className="field">
+                        <div className="my-4 mx-auto control">
                                 <input
                                     type="text"
                                     name="firstname"
-                                    id="firstname"
                                     placeholder="Prénom"
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     value={values.firstname}
                                 />
-                            <span className={errors.firstname ? 'errorMsg' : ''}>{errors.firstname && touched.firstname && errors.firstname}</span>
+                            <span className={errors.firstname ? 'block help is-size-6-desktop errorMsg' : ''}>{errors.firstname && touched.firstname && errors.firstname}</span>
                         </div>
-                        
-                        <div className="inputContainer">
+                    </div>
+                    
+                    <div className="field">
+                        <div className="my-4 mx-auto control">
                                 <input
                                     type="text"
                                     name="lastname"
-                                    id="lastname"
                                     placeholder="Nom"
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     value={values.lastname}
                                 />
-                            <span className={errors.lastname ? 'errorMsg' : ''}>{errors.lastname && touched.lastname && errors.lastname}</span>
+                            <span className={errors.lastname ? 'block help is-size-6-desktop errorMsg' : ''}>{errors.lastname && touched.lastname && errors.lastname}</span>
                         </div>
-                        
-                        <div className="inputContainer">
+                    </div>
+                    
+                    <div className="field">
+                        <div className="my-4 mx-auto control">
                                 <input
                                     type="email"
                                     name="email"
-                                    id="email"
                                     placeholder="Email"
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     value={values.email}
                                 />
-                            <span className={errors.email ? 'errorMsg' : ''}>{errors.email && touched.email && errors.email}</span>
+                            <span className={errors.email ? 'block help is-size-6-desktop errorMsg' : ''}>{errors.email && touched.email && errors.email}</span>
                         </div>
+                    </div>
 
-                        <div className="inputContainer">
+                    <div className="field">
+                        <div className="my-4 mx-auto control">
                                 <input
                                     type="password"
                                     name="password"
-                                    id="pwd"
                                     placeholder="Mot de passe"
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     value={values.password}
                                     className={errors.password && 'errorInput'}
                                 />
-                            <span className={errors.password ? 'errorMsg' : ''}>{errors.password && touched.password && errors.password}</span>
+                            <span className={errors.password ? 'block help is-size-6-desktop errorMsg' : ''}>{errors.password && touched.password && errors.password}</span>
                         </div>
-                        
-                        <div className="inputContainer">
+                    </div>
+                    
+                    <div className="field">
+                        <div className="my-4 mx-auto control">
                                 <input
                                     type="password"
                                     name="passwordConfirmation"
-                                    id="pwdConfirm"
                                     placeholder="Confirmation du mot de passe"
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     value={values.passwordConfirmation}
                                 />
-                                <span className={errors.passwordConfirmation ? 'errorMsg' : ''}>{errors.passwordConfirmation && touched.passwordConfirmation && errors.passwordConfirmation}</span>
+                                <span className={errors.passwordConfirmation ? 'block help is-size-6-desktop errorMsg' : ''}>{errors.passwordConfirmation && touched.passwordConfirmation && errors.passwordConfirmation}</span>
                         </div>
+                    </div>
 
-                        <div>
-                            <button className="btn" type="submit" disabled={!isValid || isSubmitting}>
-                                M'inscrire
-                            </button>
-                        </div>
-                        <div className="loginLink">
-                            <Link to="/login">J'ai déjà un compte, je veux me connecter</Link>
-                        </div>
-                      </div>
-                    </form>
+                    <div className='mx-auto'>
+                        <span className={errors.info ? 'block help is-size-6-desktop errorMsg' : ''}>{errors.info && errors.info}</span>
+                        <button className="button is-primary is-rounded is-medium my-4" type="submit" disabled={!isValid || isSubmitting}>
+                            M'inscrire
+                        </button>
+                    </div>
+                    <div className="mx-auto mt-5">
+                        <Link to="/login" className='has-text-link has-text-weight-semibold'>J'ai déjà un compte, je veux me connecter</Link>
+                    </div>
+            </form>
         </div>
     )
 }

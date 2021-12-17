@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
 const db = require('../models/db');
 const User = db.users;
-//const Op = db.Sequelize.Op;
 const { ValidationError, UniqueConstraintError } = require('sequelize');
 const jwt = require('jsonwebtoken');
 const match = require('../utils/regex');
@@ -54,12 +53,13 @@ exports.login = (req, res) => {
                     return res.status(401).json({ status: 'error', message: 'Mot de passe incorrect !' });
                 }
                 const token = jwt.sign(
-                    { userId: user.id },
+                    { userId: user.id, userRole: user.role },
                     process.env.TOKEN_SECRET,
                     { expiresIn: '24h' }
                 );
                 return res.setHeader('Authorization', `Bearer ${token}`).status(200).json({
                     userId: user.id,
+                    userRole: user.role,
                     token,
                     message: `Hello ${user.firstName} !`
                 });
@@ -141,7 +141,7 @@ exports.updateProfile = (req, res) => {
         }
     }
     else {
-        res.status(401).json({ message: 'Vous n\'êtes pas autorisé(e) à effectuer cette action.' });
+        res.status(403).json({ message: 'Vous n\'êtes pas autorisé(e) à effectuer cette action.' });
     }
 };
 

@@ -3,7 +3,8 @@ const multer = require('multer');
 const MIME_TYPES = {
   'image/jpg': 'jpg',
   'image/jpeg': 'jpg',
-  'image/png': 'png'
+  'image/png': 'png',
+  'image/gif': 'gif'
 };
 
 
@@ -21,11 +22,11 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (_, file, callback) => {
-  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/jpg' || file.mimetype === 'image/png') {
+  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/jpg' || file.mimetype === 'image/png' || file.mimetype === 'image/gif') {
     callback(null, true)
   } else {
     callback(new Error("L'image n'est pas acceptée"), false);
   }
 }
 
-module.exports = multer({storage, limits: {filesize: 1024 * 1024 * 5}, fileFilter});
+module.exports = multer({storage, limits: {fileSize: 1000*1000*8}, fileFilter});

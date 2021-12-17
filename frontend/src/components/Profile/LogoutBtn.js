@@ -15,7 +15,7 @@ const LogoutBtn = ({ setInfoMessage }) => {
     };
 
     return (
-        <button onClick={handleClick} className="logoutBtn">Me déconnecter</button>
+        <button onClick={handleClick} className="button is-rounded is-link is-light mx-4 mt-3">Me déconnecter</button>
     )
 }
 
