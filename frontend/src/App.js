@@ -12,6 +12,7 @@ import AuthContextProvider from './context/AuthContext';
 import ProtectedRoutes from './ProtectedRoutes';
 import ArticleByIdView from './components/Articles/ArticleByIdView';
 import UpdateArticleView from './components/Articles/UpdateArticleView';
+import ArticlesToModerateView from './components/Articles/ArticlesToModerateView';
 
 function App() {
   const [ infoMessage, setInfoMessage ] = useState(null);
@@ -25,6 +26,7 @@ function App() {
           <Route path="/login" element={<Login infoMessage={infoMessage} setInfoMessage={setInfoMessage} />} />
           <Route element={<ProtectedRoutes />}>
             <Route path="/articles" element={<Home infoMessage={infoMessage} setInfoMessage={setInfoMessage} />} />
+            <Route path="/articles/admin/signaled" element={<ArticlesToModerateView infoMessage={infoMessage} setInfoMessage={setInfoMessage} />} />
             <Route path="/article/:id" element={<ArticleByIdView infoMessage={infoMessage} setInfoMessage={setInfoMessage} />} />
             <Route path="/article/:id/update" element={<UpdateArticleView infoMessage={infoMessage} setInfoMessage={setInfoMessage} />} />
             <Route path="/profile" element={<Profile infoMessage={infoMessage} setInfoMessage={setInfoMessage} />} />

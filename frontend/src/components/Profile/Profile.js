@@ -68,7 +68,14 @@ const Profile = ({ infoMessage, setInfoMessage }) => {
                                         <button onClick={handleDelete} className='button is-rounded is-danger is-light mx-4'>Supprimer mon profil</button>
 
                                     }
+                                {
+                                user.role === 'moderator' &&
+                                <div className='is-fluid mt-6'>
+                                    <Link to='/articles/admin/signaled' className='button is-primary is-medium mt-5 is-rounded is-uppercase'>Espace modération</Link>
+                                </div>
+                                }
                             </div>
+
                         </div>
                     )
                 }

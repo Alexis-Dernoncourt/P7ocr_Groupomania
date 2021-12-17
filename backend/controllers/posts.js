@@ -3,11 +3,34 @@ const Post = db.posts;
 const User = db.users;
 const { ValidationError, UniqueConstraintError } = require('sequelize');
 const fs = require('fs');
-//const Op = db.Sequelize.Op;
+const Op = db.Sequelize.Op;
 //const match = require('../utils/regex');
 
 exports.getAllPosts = (req, res) => {
     const user_role = req.token.userRole;
+    console.log(req.query);
+
+    if (req.query.signaled && req.query.signaled === 'true' && req.query.moderated && req.query.moderated === 'false') {
+        if (user_role === 'moderator') {
+            // Récupère tous les articles signalés qui n'ont pas été modérés
+            return Post.findAll({ where: {
+                                [Op.and]: [
+                                    { signaled: true },
+                                    { moderated: false }
+                                ]},
+                                order: [
+                                    ['createdAt', 'DESC']
+                                ]
+            })
+            .then(posts => {
+                return res.status(200).json({ posts, user_role });
+            })
+            .catch(error => res.status(500).json({ error, message: 'Il y a eu une erreur, réessayez plus tard.' }))
+        } else {
+           return res.status(403).json({ message: 'Vous n\'êtes pas autorisé à effectuer cette action, désolé.'})
+        }
+    }
+
     // Récupère tous les articles (avec l'auteur associé) sauf les articles qui ont été modérés
     Post.findAll({  where: {moderated: false},
                     order: [
@@ -30,6 +53,9 @@ exports.getUserPosts = (req, res) => {
     const user_role = req.token.userRole;
     
     Post.findAll({  where: { userId: userId },
+                    order: [
+                        ['createdAt', 'DESC']
+                    ],
                     include:{   model: User,
                                 attributes: ['id', 'firstName', 'lastName', 'photo'],
                                 required: true
