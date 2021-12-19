@@ -174,7 +174,7 @@ const Home = ({ infoMessage, setInfoMessage }) => {
                                         </div>
                                         <div className='is-flex is-justify-content-center is-align-items-center m-2'>
                                             <div className='is-flex is-flex-direction-column is-align-items-flex-end'>
-                                                <p className='has-text-weight-bold is-italic m-0'>Par {el.user.firstName} {el.user.lastName}</p>
+                                                <p className='has-text-weight-bold is-italic m-0'>Par { el.userId === userId ? <span className='is-uppercase has-text-info is-size-5-desktop'>Vous</span> : `${el.user.firstName} ${el.user.lastName}` }</p>
                                             </div>
                                             <img className="roundImg" src={el.user.photo} alt="Auteur de la publication" />
                                         </div>

@@ -30,7 +30,7 @@ const ArticlesToModerateView = ({ infoMessage, setInfoMessage }) => {
             }
         })
         .catch(console.log('Il y a eu une erreur'))
-    }, [token, setInfoMessage, navigate]);
+    }, [token, setInfoMessage, navigate, arrayOfModeratededPosts]);
 
     const handleDelete = (id) => {
         setShowDeleteArticleConfirmBtn(true);
@@ -86,22 +86,22 @@ const ArticlesToModerateView = ({ infoMessage, setInfoMessage }) => {
                                         <button onClick={() => goToPageArticle(el.id)} className='button is-link is-outlined'>Voir la publication</button>
                                     </div>
 
-                                    <div className='mt-auto is-flex is-justify-content-space-between is-align-items-flex-end is-flex-wrap-wrap'>
+                                    <div className='mt-auto is-flex is-flex-direction-column is-justify-content-space-between is-align-items-flex-end is-flex-wrap-wrap'>
                                         <div className='is-flex is-flex-wrap-wrap is-justify-content-center is-align-items-center ml-auto my-auto mt-4'>
                                             <article className="message is-danger">
-                                                <div className='is-unselectable has-text-danger-dark p3 message-body'>
-                                                    <p>
+                                                <div className='is-unselectable has-text-danger-dark p3 message-body is-size-6-mobile'>
+                                                    <p className='is-size-7-mobile'>
                                                     <span className="icon">
                                                         <i className='fas fa-exclamation mr-2'></i>
                                                     </span>
                                                     Cette publication a été signalée pour modération.</p>
-                                                    <p>En cliquant sur le bouton 'Modérer la publication' ci-dessous elle ne sera plus affichée dans le fil d'actualités et soumise pour correction à son auteur. Sinon, vous pouvez la supprimer définitivement.</p>
+                                                    <p className='is-size-7-mobile'>En cliquant sur le bouton 'Modérer la publication' ci-dessous elle ne sera plus affichée dans le fil d'actualités. <p className='is-size-7-mobile'>Vous pouvez aussi la supprimer définitivement si cela vous semble nécessaire.</p></p>
                                                 </div>
                                             </article>
-                                            
+                                        </div>
+                                        <div>
                                             <button onClick={() => moderatePost(el.id)} title="Cet article n'apparaitra plus dans le fil d'actualités." className='button is-warning is-normal is-rounded py-2 px-5 my-1 mt-3 mx-4'>Modérer la publication</button>
                                         </div>
-
                                         {
                                             showDeleteArticleConfirmBtn &&
                                                 <DeleteArticleBtn post_id={idOfArticleToDelete} showDeleteArticleConfirmBtn={showDeleteArticleConfirmBtn} setShowDeleteArticleConfirmBtn={setShowDeleteArticleConfirmBtn} setIdOfArticleToDelete={setIdOfArticleToDelete} arrayOfDeletedPosts={arrayOfDeletedPosts} setArrayOfDeletedPosts={setArrayOfDeletedPosts} pathToRedirect={location.pathname} setInfoMessage={setInfoMessage}/>
