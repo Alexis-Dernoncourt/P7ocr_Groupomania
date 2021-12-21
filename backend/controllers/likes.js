@@ -170,8 +170,8 @@ exports.deleteLikes = (req, res) => {
                     } 
 
                     return Like.destroy({ where: {id: like.id} })
-                    .then(like => {
-                        return res.status(201).json({ like, message: 'Votre like a bien été supprimé !' })
+                    .then(() => {
+                        return res.status(201).json({ message: 'Votre like a bien été supprimé !' })
                     })
                 })
                 .catch(err => console.log(err))

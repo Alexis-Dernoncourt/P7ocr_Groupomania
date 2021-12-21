@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import CommentsComponent from '../Comments/CommentsComponent';
 import DeleteArticleBtn from '../DeleteArticleBtn/DeleteArticleBtn';
+import PostCommentForm from '../Comments/PostCommentForm';
+import LikesComponent from '../Likes/LikesComponent';
 
 const ArticleByIdView = ({ infoMessage, setInfoMessage }) => {
     const [article, setArticle] = useState(null);
@@ -10,6 +13,13 @@ const ArticleByIdView = ({ infoMessage, setInfoMessage }) => {
     const [arrayOfSignaledPosts, setArrayOfSignaledPosts] = useState([]);
     const [arrayOfModeratededPosts, setArrayOfModeratededPosts] = useState([]);
     const [arrayOfDeletedPosts, setArrayOfDeletedPosts] = useState([]);
+    const [arrayOfNewComment, setArrayOfNewComment] = useState([]);
+    const [arrayOfSignaledComments, setArrayOfSignaledComments] = useState([]);
+    const [arrayOfDeletedComments, setArrayOfDeletedComments] = useState([]);
+    const [likedPost, setLikedPost] = useState(0);
+    const [unlikedPost, setUnlikedPost] = useState(0);
+    const [commentToModify, setCommentToModify] = useState({});
+    const [idOfCommentToDelete, setIdOfCommentToDelete] = useState(null);
     const token = localStorage.getItem('token');
     const userId = parseInt(localStorage.getItem('user_id'));
     const params = useParams();
@@ -25,12 +35,14 @@ const ArticleByIdView = ({ infoMessage, setInfoMessage }) => {
         })
         .then(res => res.json())
         .then(article => {
-            setInfoMessage(article.message);
+            if (article.message) {
+                setInfoMessage(article.message);
+            }
             setArticle(article.post);
             setUserRole(article.user_role);
         })
         .catch(console.log('Il y a eu une erreur'))
-    }, [token, articleId, setInfoMessage]);
+    }, [token, articleId, setInfoMessage, arrayOfSignaledPosts, arrayOfSignaledComments, arrayOfModeratededPosts, arrayOfDeletedPosts, arrayOfDeletedComments, arrayOfNewComment, likedPost, unlikedPost, commentToModify]);
 
     const signalPost = (id) => {
         fetch(`/api/posts/signal/${id}`, {
@@ -56,8 +68,8 @@ const ArticleByIdView = ({ infoMessage, setInfoMessage }) => {
         })
         .then(res => res.json())
         .then(data => {
-            setInfoMessage(data.message);
             setArrayOfModeratededPosts([...arrayOfModeratededPosts, id]);
+            setInfoMessage(data.message);
         })
         .catch(console.log('Il y a eu une erreur'))
     };
@@ -71,6 +83,11 @@ const ArticleByIdView = ({ infoMessage, setInfoMessage }) => {
         navigate(`/article/${id}/update`);
     };
 
+    if (infoMessage) {
+        setTimeout(() => {
+            setInfoMessage(null);
+        }, 5000);
+    };
 
     return (
         <div className='pt-6'>
@@ -84,7 +101,7 @@ const ArticleByIdView = ({ infoMessage, setInfoMessage }) => {
                 :
                 
                       <div className="is-flex is-flex-direction-row is-justify-content-center mt-6" key={`${article.createdAt}-${article.id}`}>
-                                <div className="box p-1 container is-max-desktop is-flex is-flex-direction-column is-align-items-center">
+                                <div className="box p-1 container is-max-desktop is-flex is-flex-direction-column is-align-items-center width100vw">
                                     <div className='is-flex is-flex-direction-column is-justify-content-center container-click-article'>
                                     {
                                         article.media ?
@@ -153,8 +170,7 @@ const ArticleByIdView = ({ infoMessage, setInfoMessage }) => {
                                     <span className='line'></span>
                                     <div className='is-flex is-justify-content-space-between column is-full is-full-mobile p-1'>
                                         <div className='likeContainer is-flex is-justify-content-center is-align-items-center'>
-                                            <span className='like'>♥</span>
-                                            <span className='totalLikes'>1</span>
+                                            <LikesComponent likes={article.likes} setLikedPost={setLikedPost} setUnlikedPost={setUnlikedPost} postId={article.id} setInfoMessage={setInfoMessage} />
                                         </div>
                                         <div className='is-flex is-justify-content-center is-align-items-center m-2'>
                                             <div className='is-flex is-flex-direction-column is-align-items-flex-end'>
@@ -163,72 +179,25 @@ const ArticleByIdView = ({ infoMessage, setInfoMessage }) => {
                                             <img className="roundImg" src={article.user.photo} alt="Auteur de la publication" />
                                         </div>
                                     </div>
-                                    <small className='help ml-auto mr-3'>Postée le <em>{new Date(article.createdAt).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</em> à <em>{new Date(article.createdAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</em></small>
+                                    <small className='help ml-auto mr-3'>Posté le <em>{new Date(article.createdAt).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</em> à <em>{new Date(article.createdAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</em></small>
 
                                     <small className='help ml-auto mr-3'>Dernière mise à jour le <em>{new Date(article.updatedAt).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</em> à <em>{new Date(article.updatedAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</em></small>
 
                                     <div className='container is-fluid mt-5 has-background-light py-4'>
-                                        <p className='is-size-6 is-uppercase has-text-centered pb-5 is-underlined'>Derniers commentaires :</p>
-                                        <article className="media">
-                                            <figure className="media-left">
-                                                <p className="image is-48x48 mt-3">
-                                                    <img src="https://bulma.io/images/placeholders/128x128.png" alt='test' />
-                                                </p>
-                                            </figure>
-                                            <div className="media-content">
-                                                <div className="content">
-                                                    <div>
-                                                        <strong className='is-size-7 is-size-6-desktop'>Barbara Middleton</strong>
-                                                        <p className='is-size-7 is-size-6-desktop'>
-                                                        Lorem ipsum dolor sit amet, consectetur adipiscing articleit. Duis porta eros lacus, nec ultricies articleit blandit non. Suspendisse particlelentesque mauris sit amet dolor blandit rutrum. Nunc in tempus turpis.
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </article>
+                                        
+                                        {
+                                            !article.comments.length ?
+                                            <p className=' has-text-centered is-italic my-4'>Cette publication n'a pas encore de commentaire. Ajoutez-en un !</p>
 
-                                        <article className="media">
-                                            <figure className="media-left">
-                                                <p className="image is-48x48 mt-3">
-                                                    <img src="https://bulma.io/images/placeholders/128x128.png" alt='test' />
-                                                </p>
-                                            </figure>
-                                            <div className="media-content">
-                                                <div className="content">
-                                                    <div>
-                                                        <strong className='is-size-7 is-size-6-desktop'>John Mire</strong>
-                                                        <p className='is-size-7 is-size-6-desktop'>
-                                                        Lorem ipsum dolor sit amet, consectetur adipiscing articleit. Duis porta eros lacus, nec ultricies articleit blandit non. Suspendisse particlelentesque mauris sit amet dolor blandit rutrum. Nunc in tempus turpis.
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </article>
-
-                                        <article className="media is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
+                                            :
                                             <div>
-                                                <p className='is-size-6 has-text-centered pb-2'>Ajouter un commentaire :</p>
+                                                <p className='is-size-6 is-uppercase has-text-centered pb-5 is-underlined'>Derniers commentaires :</p>
+                                                <CommentsComponent comments={article.comments} arrayOfSignaledComments={arrayOfSignaledComments} setArrayOfSignaledComments={setArrayOfSignaledComments} arrayOfDeletedComments={arrayOfDeletedComments} setArrayOfDeletedComments={setArrayOfDeletedComments} userRole={userRole} arrayOfNewComment={arrayOfNewComment} setArrayOfNewComment={setArrayOfNewComment} commentToModify={commentToModify} setCommentToModify={setCommentToModify} idOfCommentToDelete={idOfCommentToDelete} setIdOfCommentToDelete={setIdOfCommentToDelete} setInfoMessage={setInfoMessage}/>
                                             </div>
-                                            <div className="media container is-fluid is-flex is-flex-direction-row is-align-items-start">
-                                                <figure className="media-left">
-                                                    <p className="image is-48x48">
-                                                        <img src="https://bulma.io/images/placeholders/128x128.png" alt='test' />
-                                                    </p>
-                                                </figure>
-                                                <div className="media-content">
-                                                    <div className="field">
-                                                        <p className="control">
-                                                            <textarea className="textarea" cols='30' rows='2' placeholder="Add a comment..."></textarea>
-                                                        </p>
-                                                    </div>
-                                                    <div className="field">
-                                                        <p className="control">
-                                                            <button className="button">Post comment</button>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </article>
+
+                                        }
+
+                                        <PostCommentForm postId={article.id} arrayOfNewComment={arrayOfNewComment} setArrayOfNewComment={setArrayOfNewComment} setInfoMessage={setInfoMessage} />
                                         
                                     </div>
                                 </div>

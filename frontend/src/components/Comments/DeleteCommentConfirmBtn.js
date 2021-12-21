@@ -1,11 +1,12 @@
 import { useNavigate } from "react-router-dom";
 
-const DeleteArticleBtn = ({ post_id, showDeleteArticleConfirmBtn, setShowDeleteArticleConfirmBtn, setIdOfArticleToDelete, arrayOfDeletedPosts, setArrayOfDeletedPosts, pathToRedirect, setInfoMessage }) => {
+const DeleteCommentConfirmBtn = ({ comment_id, showDeleteCommentConfirmBtn, setShowDeleteCommentConfirmBtn, setIdOfCommentToDelete, arrayOfDeletedComments, setArrayOfDeletedComments, pathToRedirect, setInfoMessage }) => {
 
     const navigate = useNavigate();
+    console.log(pathToRedirect);
 
-    const deleteArticle = () => {
-        fetch(`/api/posts/delete/${post_id}`, {
+    const deleteComment = () => {
+        fetch(`/api/comments/${comment_id}`, {
             headers: {
                 'Authorization': localStorage.getItem('token') && localStorage.getItem('token')
             },
@@ -13,9 +14,9 @@ const DeleteArticleBtn = ({ post_id, showDeleteArticleConfirmBtn, setShowDeleteA
         })
         .then(data => data.json())
         .then(response => {
-            setArrayOfDeletedPosts([...arrayOfDeletedPosts, post_id]);
-            setShowDeleteArticleConfirmBtn(false);
-            setIdOfArticleToDelete(null);
+            setArrayOfDeletedComments([...arrayOfDeletedComments, comment_id]);
+            setShowDeleteCommentConfirmBtn(false);
+            setIdOfCommentToDelete(null);
             navigate(pathToRedirect);
             setInfoMessage(response.message);
         })
@@ -23,18 +24,19 @@ const DeleteArticleBtn = ({ post_id, showDeleteArticleConfirmBtn, setShowDeleteA
     };
 
     const hide = () => {
-        setShowDeleteArticleConfirmBtn(false);
-        setIdOfArticleToDelete(null);
+        setShowDeleteCommentConfirmBtn(false);
+        setIdOfCommentToDelete(null);
     };
 
+
     return (
-        <div className={`modal ${showDeleteArticleConfirmBtn && 'is-flex'} `}>
+        <div className={`modal ${showDeleteCommentConfirmBtn && 'is-flex'} `}>
             <div className="modal-background"></div>
-            <div className={`modal-content ${showDeleteArticleConfirmBtn && 'box has-background-white py-6'} `}>
-                <p className="is-size-5 has-text-danger has-text-centered has-text-weight-bold mb-1">Voulez-vous vraiment supprimer cet article ?</p>
+            <div className={`modal-content ${showDeleteCommentConfirmBtn && 'box has-background-white py-6'} `}>
+                <p className="is-size-5 has-text-danger has-text-centered has-text-weight-bold mb-1">Voulez-vous vraiment supprimer ce commentaire ?</p>
                 <p className="is-size-6 has-text-dark has-text-centered has-text-weight-semibold mb-5">Attention : cette action est définitive.</p>
                 <div className="is-flex is-flex-direction-row is-justify-content-center has-text-centered">
-                    <button className="button is-rounded is-danger is-outlined has-text-size-bold has-text-weight-semibold is-uppercase mx-3" onClick={deleteArticle}>Oui</button>
+                    <button className="button is-rounded is-danger is-outlined has-text-size-bold has-text-weight-semibold is-uppercase mx-3" onClick={deleteComment}>Oui</button>
                     <button className="button is-rounded is-primary is-outlined has-text-size-bold has-text-weight-semibold is-uppercase mx-3" onClick={hide}>Non</button>
                 </div>
             </div>
@@ -43,4 +45,4 @@ const DeleteArticleBtn = ({ post_id, showDeleteArticleConfirmBtn, setShowDeleteA
     )
 }
 
-export default DeleteArticleBtn
+export default DeleteCommentConfirmBtn

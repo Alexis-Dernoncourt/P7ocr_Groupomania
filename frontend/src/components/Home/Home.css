@@ -11,11 +11,13 @@
 
 .postMedia {
     width: 100%;
+    min-width: auto;
     object-fit: cover;
     max-height: 550px;
     border-radius: 4px;
 }
 .postMediaGIF {
+    min-width: auto;
     object-fit: cover;
     max-height: 650px;
     border-radius: 4px;
@@ -32,7 +34,7 @@
     width: 15%;
 }
 .likeContainer > .like {
-    font-size: 3rem;
+    font-size: 2rem;
 }
 .likeContainer > .totalLikes {
     align-self: center;

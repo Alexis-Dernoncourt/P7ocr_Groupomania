@@ -73,13 +73,14 @@ exports.login = (req, res) => {
 
 exports.getProfile = (req, res) => {
     const userId = req.token.userId;
+    const expToken = req.token.exp;
     // récupère uniquement les éléments utiles (pas le password)
     User.findOne({attributes: ['id', 'firstName', 'lastName', 'email', 'photo', 'role', 'createdAt', 'updatedAt'], where: { id: userId } })
     .then(user => {
         if (!user) {
             return res.status(401).json({ message: 'Utilisateur non trouvé ! Vérifiez vos informations ou créez un compte.' });
         }
-        res.status(200).json({ user });
+        res.status(200).json({ user, expToken: expToken });
     })
     .catch(error => res.status(500).json({ error, message: 'Il y a eu une erreur, réessayez plus tard.' }));
 };

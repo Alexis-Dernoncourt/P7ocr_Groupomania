@@ -10,6 +10,7 @@ const LogoutBtn = ({ setInfoMessage }) => {
     const handleClick = () => {
         setInfoMessage('Vous êtes déconnecté');
         localStorage.removeItem('token');
+        localStorage.removeItem('user_id');
         setAuth(false);
         navigate("/login");
     };

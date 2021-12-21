@@ -97,7 +97,7 @@ const ArticlesByUserView = ({ infoMessage, setInfoMessage }) => {
 
                                     <div className='mt-auto is-flex is-justify-content-space-between is-align-items-flex-end is-flex-wrap-wrap'>
                                         <div>
-                                            <small className='help ml-auto mr-3'>Publiée le <em>{new Date(el.createdAt).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</em> à <em>{new Date(el.createdAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</em></small>
+                                            <small className='help ml-auto mr-3'>Publié le <em>{new Date(el.createdAt).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</em> à <em>{new Date(el.createdAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</em></small>
 
                                             {
                                                 el.updatedAt !== el.createdAt ?

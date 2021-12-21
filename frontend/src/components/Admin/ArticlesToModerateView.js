@@ -90,12 +90,15 @@ const ArticlesToModerateView = ({ infoMessage, setInfoMessage }) => {
                                         <div className='is-flex is-flex-wrap-wrap is-justify-content-center is-align-items-center ml-auto my-auto mt-4'>
                                             <article className="message is-danger">
                                                 <div className='is-unselectable has-text-danger-dark p3 message-body is-size-6-mobile'>
-                                                    <p className='is-size-7-mobile'>
-                                                    <span className="icon">
-                                                        <i className='fas fa-exclamation mr-2'></i>
-                                                    </span>
-                                                    Cette publication a été signalée pour modération.</p>
-                                                    <p className='is-size-7-mobile'>En cliquant sur le bouton 'Modérer la publication' ci-dessous elle ne sera plus affichée dans le fil d'actualités. <p className='is-size-7-mobile'>Vous pouvez aussi la supprimer définitivement si cela vous semble nécessaire.</p></p>
+                                                    <div className='is-size-7-mobile'>
+                                                        <p className='is-size-7-mobile'>
+                                                        <span className="icon">
+                                                            <i className='fas fa-exclamation mr-2'></i>
+                                                        </span>
+                                                        Cette publication a été signalée pour modération.</p>
+                                                        <p className='is-size-7-mobile'>En cliquant sur le bouton 'Modérer la publication' ci-dessous elle ne sera plus affichée dans le fil d'actualités.</p>
+                                                        <p className='is-size-7-mobile'>Vous pouvez aussi la supprimer définitivement si cela vous semble nécessaire.</p>
+                                                    </div>
                                                 </div>
                                             </article>
                                         </div>

@@ -19,7 +19,12 @@ const Profile = ({ infoMessage, setInfoMessage }) => {
             }
         })
         .then(res => res.json())
-        .then(data => { setUser(data.user) })
+        .then(data => { 
+            setUser(data.user);
+            if (!localStorage.getItem('expToken')) {
+                localStorage.setItem('expToken', data.expToken);
+            }
+        })
         .catch(console.log('erreur'))
     }, [setUser]);
 
@@ -71,7 +76,7 @@ const Profile = ({ infoMessage, setInfoMessage }) => {
                                 {
                                 user.role === 'moderator' &&
                                 <div className='is-fluid mt-6'>
-                                    <Link to='/articles/admin/signaled' className='button is-primary is-medium mt-5 is-rounded is-uppercase'>Espace modération</Link>
+                                    <Link to='/admin' className='button is-primary is-medium mt-5 is-rounded is-uppercase'>Espace modération</Link>
                                 </div>
                                 }
                             </div>

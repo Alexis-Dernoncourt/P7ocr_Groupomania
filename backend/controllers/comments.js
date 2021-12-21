@@ -2,10 +2,10 @@ const db = require('../models/db');
 const Post = db.posts;
 const User = db.users;
 const Comment = db.comments;
-const { ValidationError, UniqueConstraintError } = require('sequelize');
+const { ValidationError } = require('sequelize');
 //const Op = db.Sequelize.Op;
 
-exports.getAllComments = (req, res, next) => {
+exports.getAllComments = (req, res) => {
 
     if (req.query.post_id) {
         const postId = parseInt(req.query.post_id);
@@ -76,7 +76,7 @@ exports.getAllComments = (req, res, next) => {
 };
 
 exports.postNewComment = (req, res) => {
-    const userId = parseInt(req.body.userId);
+    const userId = req.body.userId;
     const postId = parseInt(req.body.postId);
     const media = req.body.imgLink ? req.body.imgLink : null;
 

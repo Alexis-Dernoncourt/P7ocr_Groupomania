@@ -1,6 +1,8 @@
 const db = require('../models/db');
 const Post = db.posts;
 const User = db.users;
+const Comment = db.comments;
+const Like = db.likes;
 const { ValidationError, UniqueConstraintError } = require('sequelize');
 const fs = require('fs');
 const Op = db.Sequelize.Op;
@@ -8,7 +10,7 @@ const Op = db.Sequelize.Op;
 
 exports.getAllPosts = (req, res) => {
     const user_role = req.token.userRole;
-    console.log(req.query);
+    console.log(req.token);
 
     if (req.query.signaled && req.query.signaled === 'true' && req.query.moderated && req.query.moderated === 'false') {
         if (user_role === 'moderator') {
@@ -31,15 +33,33 @@ exports.getAllPosts = (req, res) => {
         }
     }
 
-    // Récupère tous les articles (avec l'auteur associé) sauf les articles qui ont été modérés
+    // Récupère tous les articles qui n'ont pas été modérés (avec l'auteur associé)
+    // ainsi que les commentaires associés (s'il y en a) qui n'ont pas été modérés (avec auteur du commentaire)
     Post.findAll({  where: {moderated: false},
                     order: [
                         ['createdAt', 'DESC']
                     ],
-                    include:{   model: User,
+                    include:[
+                        {   model: User,
+                            attributes: ['id', 'firstName', 'lastName', 'photo'],
+                            required: true
+                        },
+                        {
+                            model: Like
+                        },
+                        {   model: Comment,
+                            where: { moderated: false},
+                            order: [
+                                ['createdAt', 'DESC']
+                            ],
+                            limit: 3,
+                            include: {
+                                model: User,
                                 attributes: ['id', 'firstName', 'lastName', 'photo'],
                                 required: true
                             }
+                        }
+                    ]
                 })
     .then(posts => {
         return res.status(200).json({ posts, user_role });
@@ -78,11 +98,26 @@ exports.getPostById = (req, res) => {
     const postId = req.params.id;
     const user_role = req.token.userRole;
     Post.findOne({  where: { id: postId },
-                    include:{
+                    include:[{
                         model: User,
                         attributes: ['id', 'firstName', 'lastName', 'photo'],
                         required: true
-                    }
+                    },
+                    {
+                        model: Like
+                    },
+                    {   model: Comment,
+                        where: { moderated: false },
+                        order: [
+                            ['createdAt', 'DESC']
+                        ],
+                        required: false,
+                        include: {
+                            model: User,
+                            attributes: ['id', 'firstName', 'lastName', 'photo'],
+                            required: true
+                        }
+                    }]
                 })
     .then(post => {
         if (!post) {

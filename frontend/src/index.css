@@ -12,8 +12,33 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.redHeart {
+  color: darkred !important;
+  animation: animationLike .3s ease-out !important;
+}
+
+.unlikeAnim {
+  animation: animationLikeReverse .3s ease-in !important;
+}
+
+.width100vw {
+  width: 100vw !important;
+}
+
 .noborders {
   border: none !important;
+}
+
+.border-top {
+  border-top: 1px solid rgba(219,219,219,.5);
+}
+
+.commentImg {
+  min-width: auto;
+  max-width: 350px;
+  height: auto;
+  object-fit: cover;
+  border-radius: 5px;
 }
 
 .infoMessage {
@@ -30,4 +55,40 @@ body {
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;
+}
+
+@keyframes animationLikeReverse {
+  0% {
+    opacity: 0;
+    transform: scale(1);
+  }
+  10% {
+    transform: scale(1.5);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+
+  }
+}
+
+
+@keyframes animationLike {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  70% {
+    opacity: 0.3;
+    transform: scale(1.5);
+  }
+  90% {
+    opacity: 0.9;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+
+  }
 }
