@@ -28,7 +28,7 @@ function App() {
           <Route path="/login" element={<Login infoMessage={infoMessage} setInfoMessage={setInfoMessage} />} />
           <Route element={<ProtectedRoutes />}>
             <Route path="/articles" element={<Home infoMessage={infoMessage} setInfoMessage={setInfoMessage} />} />
-            <Route path="/admin" element={<AdminPageView infoMessage={infoMessage} setInfoMessage={setInfoMessage} />} >
+            <Route path="/admin" element={<AdminPageView />} >
               <Route path="/admin/moderate-posts" element={<ArticlesToModerateView infoMessage={infoMessage} setInfoMessage={setInfoMessage} />}/>
               <Route path="/admin/moderate-comments" element={<CommentsToModerateView infoMessage={infoMessage} setInfoMessage={setInfoMessage} />} />
             </Route>

@@ -11,6 +11,7 @@ const LogoutBtn = ({ setInfoMessage }) => {
         setInfoMessage('Vous êtes déconnecté');
         localStorage.removeItem('token');
         localStorage.removeItem('user_id');
+        localStorage.removeItem('expToken');
         setAuth(false);
         navigate("/login");
     };

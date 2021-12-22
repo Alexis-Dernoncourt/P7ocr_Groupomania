@@ -3,7 +3,7 @@ const Post = db.posts;
 const User = db.users;
 const Comment = db.comments;
 const { ValidationError } = require('sequelize');
-//const Op = db.Sequelize.Op;
+const Op = db.Sequelize.Op;
 
 exports.getAllComments = (req, res) => {
 
@@ -66,6 +66,36 @@ exports.getAllComments = (req, res) => {
             })
             .catch(error => {
                 return res.status(401).json({ error, message: 'Il y a eu une erreur, réessayez plus tard.' });
+            })
+        } else {
+            return res.status(403).json({ message: 'Cette action vous est interdite. Vérifiez vos informations.' });
+        }
+    } else if (req.query.admin && req.query.admin === 'comments') {
+        if (req.token.userRole === 'moderator') {
+            return Comment.findAndCountAll({
+                where: { 
+                    moderated: false,
+                    [Op.not]: [
+                        {signaled: null}
+                    ]
+                },
+                order: [
+                    ['signaled', 'DESC']
+                ],
+                include:{ 
+                    model: User,
+                    attributes: ['id', 'firstName', 'lastName', 'photo'],
+                    required: true
+                }
+            })
+            .then(comments => {
+                if (!comments || comments.count === 0) {
+                    return res.status(404).json({ rows: [], count: 0, message: 'Il n\'y a pas de commentaires signalés.' })
+                }
+                return res.status(200).json({ comments, user_role: req.token.userRole });
+            })
+            .catch(error => {
+                return res.status(401).json({ error: error.message, message: 'Il y a eu une erreur, réessayez plus tard.' });
             })
         } else {
             return res.status(403).json({ message: 'Cette action vous est interdite. Vérifiez vos informations.' });

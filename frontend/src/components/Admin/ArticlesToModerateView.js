@@ -15,6 +15,10 @@ const ArticlesToModerateView = ({ infoMessage, setInfoMessage }) => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        document.title = 'Groupomania - ADMIN : modération des articles';
+    }, []);
+
+    useEffect(() => {
         fetch(`/api/posts?signaled=true&moderated=false`, {
             headers: {
                 'Authorization': token
@@ -54,6 +58,12 @@ const ArticlesToModerateView = ({ infoMessage, setInfoMessage }) => {
             setArrayOfModeratededPosts([...arrayOfModeratededPosts, id]);
         })
         .catch(console.log('Il y a eu une erreur'))
+    };
+
+    if (infoMessage) {
+        setTimeout(() => {
+            setInfoMessage(null);
+        }, 5000);
     };
 
     return (

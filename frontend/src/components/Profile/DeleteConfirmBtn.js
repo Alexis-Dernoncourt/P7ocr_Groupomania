@@ -21,6 +21,7 @@ const DeleteConfirmBtn = ({user, setUser, showDeleteBtn, setShowDeleteBtn, setIn
             setUser();
             localStorage.removeItem('token');
             localStorage.removeItem('user_id');
+            localStorage.removeItem('expToken');
             navigate("/login");
         })
         .catch(() => setInfoMessage('Il y a eu une erreur. Réessayez plus tard.'))        

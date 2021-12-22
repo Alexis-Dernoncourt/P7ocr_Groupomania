@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 const DeleteCommentConfirmBtn = ({ comment_id, showDeleteCommentConfirmBtn, setShowDeleteCommentConfirmBtn, setIdOfCommentToDelete, arrayOfDeletedComments, setArrayOfDeletedComments, pathToRedirect, setInfoMessage }) => {
 
     const navigate = useNavigate();
-    console.log(pathToRedirect);
 
     const deleteComment = () => {
         fetch(`/api/comments/${comment_id}`, {

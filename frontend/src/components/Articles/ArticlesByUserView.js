@@ -25,7 +25,7 @@ const ArticlesByUserView = ({ infoMessage, setInfoMessage }) => {
             setUserRole(articles.user_role);
         })
         .catch(console.log('Il y a eu une erreur'))
-    }, [token, userId]);
+    }, [token, userId, idOfArticleToDelete]);
 
     const handleDelete = (id) => {
         setShowDeleteArticleConfirmBtn(true);

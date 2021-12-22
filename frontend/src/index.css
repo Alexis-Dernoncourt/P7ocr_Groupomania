@@ -60,7 +60,7 @@ body {
 @keyframes animationLikeReverse {
   0% {
     opacity: 0;
-    transform: scale(1);
+    transform: scale(0.8);
   }
   10% {
     transform: scale(1.5);

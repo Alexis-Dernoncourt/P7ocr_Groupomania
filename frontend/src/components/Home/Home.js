@@ -5,6 +5,7 @@ import CommentsComponent from '../Comments/CommentsComponent';
 import PostCommentForm from '../Comments/PostCommentForm';
 import DeleteArticleBtn from '../DeleteArticleBtn/DeleteArticleBtn';
 import LikesComponent from '../Likes/LikesComponent';
+
 import './Home.css';
 
 const Home = ({ infoMessage, setInfoMessage }) => {

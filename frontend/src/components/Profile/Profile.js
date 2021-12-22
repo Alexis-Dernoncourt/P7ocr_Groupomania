@@ -21,9 +21,7 @@ const Profile = ({ infoMessage, setInfoMessage }) => {
         .then(res => res.json())
         .then(data => { 
             setUser(data.user);
-            if (!localStorage.getItem('expToken')) {
-                localStorage.setItem('expToken', data.expToken);
-            }
+            localStorage.setItem('expToken', data.expToken);
         })
         .catch(console.log('erreur'))
     }, [setUser]);
