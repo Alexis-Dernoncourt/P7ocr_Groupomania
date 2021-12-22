@@ -17,8 +17,6 @@ const CommentsToModerateView = ({ infoMessage, setInfoMessage }) => {
     const token = localStorage.getItem('token');
     const location = useLocation();
 
-    console.log(comments, totalOfSignaledComments, arrayOfModeratedComments, idOfCommentToModerate, arrayOfDeletedComments, idOfCommentToDelete, showDeleteCommentConfirmBtn);
-
     if (comments.length === 1 && idOfCommentToModerate === comments[0].id) {
         setComments([]);
         setTotalOfSignaledComments(0);
@@ -38,7 +36,6 @@ const CommentsToModerateView = ({ infoMessage, setInfoMessage }) => {
         })
         .then(res => res.json())
         .then(data => {
-            console.log(data.rows);
             if (data.comments) {
                 setComments(data.comments.rows);
                 setTotalOfSignaledComments(data.comments.count);

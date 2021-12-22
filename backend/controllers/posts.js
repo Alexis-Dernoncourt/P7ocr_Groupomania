@@ -10,7 +10,6 @@ const Op = db.Sequelize.Op;
 
 exports.getAllPosts = (req, res) => {
     const user_role = req.token.userRole;
-    console.log(req.token);
 
     if (req.query.signaled && req.query.signaled === 'true' && req.query.moderated && req.query.moderated === 'false') {
         if (user_role === 'moderator') {
