@@ -75,9 +75,11 @@ const UpdateArticleView = ({ setInfoMessage }) => {
     const checkErrors = (values, errors) => {
         if (match.regex.wordsFilter.test(values.content)) {
             errors.content = 'Pas d\'insultes ou mot interdit, veuillez de corriger votre message...';
-        } else if (match.regex.wordsFilter.test(values.imgLink)) {
+        }
+        if (match.regex.wordsFilter.test(values.imgLink)) {
             errors.imgLink = 'Pas d\'insultes ou mot interdit, veuillez de corriger votre message...';
-        } else if (!values.imgLink && !values.file && values.content === article.content) {
+        }
+        if (!values.imgLink && !values.file && values.content === article.content) {
             errors.info = 'Veuillez renseigner/modifier au moins un des champs ci-dessus.';
         }
     };

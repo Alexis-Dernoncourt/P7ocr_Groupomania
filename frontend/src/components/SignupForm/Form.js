@@ -18,6 +18,7 @@ const Form = ({ values, errors, touched, handleChange, handleBlur, handleSubmit,
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     value={values.firstname}
+                                    className={errors.firstname && 'errorInput'}
                                 />
                             <span className={errors.firstname ? 'block help is-size-6-desktop errorMsg' : ''}>{errors.firstname && touched.firstname && errors.firstname}</span>
                         </div>
@@ -32,6 +33,7 @@ const Form = ({ values, errors, touched, handleChange, handleBlur, handleSubmit,
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     value={values.lastname}
+                                    className={errors.lastname && 'errorInput'}
                                 />
                             <span className={errors.lastname ? 'block help is-size-6-desktop errorMsg' : ''}>{errors.lastname && touched.lastname && errors.lastname}</span>
                         </div>
@@ -46,6 +48,7 @@ const Form = ({ values, errors, touched, handleChange, handleBlur, handleSubmit,
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     value={values.email}
+                                    className={errors.email && 'errorInput'}
                                 />
                             <span className={errors.email ? 'block help is-size-6-desktop errorMsg' : ''}>{errors.email && touched.email && errors.email}</span>
                         </div>
@@ -75,6 +78,7 @@ const Form = ({ values, errors, touched, handleChange, handleBlur, handleSubmit,
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     value={values.passwordConfirmation}
+                                    className={errors.passwordConfirmation && 'errorInput'}
                                 />
                                 <span className={errors.passwordConfirmation ? 'block help is-size-6-desktop errorMsg' : ''}>{errors.passwordConfirmation && touched.passwordConfirmation && errors.passwordConfirmation}</span>
                         </div>

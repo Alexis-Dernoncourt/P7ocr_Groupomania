@@ -1,7 +1,6 @@
 import { useState, useRef } from 'react';
 import { Formik } from 'formik';
 import match from '../../utils/regex';
-//import '../SignupForm/SignupForm.css';
 import './PostArticleForm.css';
 
 const PostArticleForm = ({ setInfoMessage, showModal, setShowModal }) => {
@@ -61,9 +60,11 @@ const PostArticleForm = ({ setInfoMessage, showModal, setShowModal }) => {
     const checkErrors = (values, errors) => {
         if (match.regex.wordsFilter.test(values.content)) {
             errors.content = 'Pas d\'insultes ou mot interdit, veuillez de corriger votre message...';
-        } else if (match.regex.wordsFilter.test(values.imgLink)) {
+        } 
+        if (match.regex.wordsFilter.test(values.imgLink)) {
             errors.imgLink = 'Pas d\'insultes ou mot interdit, veuillez de corriger votre message...';
-        } else if (!values.imgLink && !values.content && !values.file) {
+        } 
+        if (!values.imgLink && !values.content && !values.file) {
             errors.info = 'Veuillez renseigner au moins un des champs ci-dessus.';
         }
     };

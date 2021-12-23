@@ -6,7 +6,7 @@ const regex = {
     passwordCheck : (/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!#$%&()+,-./:;=?@[\]^_`{|}~])[A-Za-z0-9!#$%&()+,-./:;=?@[\]^_`{|}~]{8,}$/),
 
     // list of words to filter (insults, sql...)
-    wordsFilter : (/select'$|get|delete|script$|put1|putain|putin|pute|fdp|pd|^ducon$|con$|conne$|^connasse$|garce|^batar|bâtard|^encul|enkul|enqul|^salau|^bite$|^cul|couille|^chier$|dugland|glandu/i),
+    wordsFilter : (/select$|'select|localStorage|get|'get|'delete|delete|<script$|script>|<script>|alert\(|put1|putain|putin|pute|fdp|pd|^ducon$|con$|conne$|^connasse$|garce|^batar|bâtard|^encul|enkul|enqul|^salau|^bite$|^cul|couille|^chier$|dugland|glandu/i),
 
     isGif : (/\.gif$/i)
 }

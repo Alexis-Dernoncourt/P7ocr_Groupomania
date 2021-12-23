@@ -41,21 +41,28 @@ const SignupForm = ({ setInfoMessage }) => {
     const checkErrors = (values, errors) => {
         if (!values.firstname) {
             errors.firstname = 'Veuillez renseigner votre prénom';
-        } else if (match.regex.wordsFilter.test(values.firstname) || match.regex.wordsFilter.test(values.lastname) || match.regex.wordsFilter.test(values.email) || match.regex.wordsFilter.test(values.password)) {
+        } 
+        if (match.regex.wordsFilter.test(values.firstname) || match.regex.wordsFilter.test(values.lastname) || match.regex.wordsFilter.test(values.email) || match.regex.wordsFilter.test(values.password)) {
             errors.info = 'Un des champ comporte une insulte ou un mot interdit. Veuillez corriger pour continuer.';
-        } else if (!values.lastname) {
+        } 
+        if (!values.lastname) {
             errors.lastname = 'Veuillez renseigner votre nom';
-        } else if (!values.email) {
+        } 
+        if (!values.email) {
             errors.email = 'Veuillez renseigner votre email';
-        } else if (!values.password) {
+        } 
+        if (!values.password) {
             errors.password = 'Veuillez renseigner votre mot de passe';
-        } else if (!values.passwordConfirmation) {
+        } 
+        if (!values.passwordConfirmation) {
             errors.passwordConfirmation = 'Veuillez confirmer votre mot de passe';
-        } else if (!match.regex.mailCheck.test(values.email)) {
+        } 
+        if (!match.regex.mailCheck.test(values.email)) {
             errors.email = 'Adresse email invalide';
         } else if (!match.regex.passwordCheck.test(values.password)) {
             errors.password = 'Invalide. *Au moins 8 caractères comprenants 1 chiffre, une majuscule et 1 caractère spécial.';
-        } else if (values.password !== values.passwordConfirmation) {
+        } 
+        if (values.password !== values.passwordConfirmation) {
             errors.password = 'Les mots de passe ne sont pas identiques. Veuillez réessayer.';
             errors.passwordConfirmation = 'Les mots de passe ne sont pas identiques. Veuillez réessayer.';
         }
