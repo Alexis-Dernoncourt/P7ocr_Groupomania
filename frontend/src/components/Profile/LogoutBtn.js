@@ -10,12 +10,14 @@ const LogoutBtn = ({ setInfoMessage }) => {
     const handleClick = () => {
         setInfoMessage('Vous êtes déconnecté');
         localStorage.removeItem('token');
+        localStorage.removeItem('user_id');
+        localStorage.removeItem('expToken');
         setAuth(false);
         navigate("/login");
     };
 
     return (
-        <button onClick={handleClick} className="logoutBtn">Me déconnecter</button>
+        <button onClick={handleClick} className="button is-rounded is-link is-light mx-4 mt-3">Me déconnecter</button>
     )
 }
 

@@ -1,5 +1,10 @@
-body {
+* {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
@@ -7,21 +12,83 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.redHeart {
+  color: darkred !important;
+  animation: animationLike .3s ease-out !important;
+}
+
+.unlikeAnim {
+  animation: animationLikeReverse .3s ease-in !important;
+}
+
+.width100vw {
+  width: 100vw !important;
+}
+
+.noborders {
+  border: none !important;
+}
+
+.border-top {
+  border-top: 1px solid rgba(219,219,219,.5);
+}
+
+.commentImg {
+  min-width: auto;
+  max-width: 350px;
+  height: auto;
+  object-fit: cover;
+  border-radius: 5px;
 }
 
 .infoMessage {
+  max-width: 80vw;
   width: max-content;
-  font-size: 1.3rem;
+  font-size: 1.1rem;
+  font-weight: bold;
   text-align: center;
   padding: .9rem 1.2rem;
-  border-radius: 8px;
-  background-color: rgb(155, 207, 196);
-  position: absolute;
-  top: 10vh;
+  border-radius: 4px;
+  background-color: rgba(183, 228, 218, .7);
+  position: fixed;
+  top: 15vh;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
   z-index: 100;
+}
+
+@keyframes animationLikeReverse {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  10% {
+    transform: scale(1.5);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+
+  }
+}
+
+
+@keyframes animationLike {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  70% {
+    opacity: 0.3;
+    transform: scale(1.5);
+  }
+  90% {
+    opacity: 0.9;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+
+  }
 }

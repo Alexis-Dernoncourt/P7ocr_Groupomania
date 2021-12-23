@@ -2,7 +2,9 @@ const express = require('express');
 const path = require("path");
 const db = require('./models/db');
 const userRoutes = require('./routes/users');
-//const postsRoutes = require('./routes/posts');
+const postsRoutes = require('./routes/posts');
+const commentsRoutes = require('./routes/comments');
+const likesRoutes = require('./routes/likes');
 
 const app = express();
 
@@ -28,7 +30,9 @@ app.use((_, res, next) => {
 });
 
 app.use('/api/auth', userRoutes);
-//app.use('/api/posts', postsRoutes);
+app.use('/api/posts', postsRoutes);
+app.use('/api/comments', commentsRoutes);
+app.use('/api/likes', likesRoutes);
 
 app.use(({res}) => {
     const message = 'Impoosible de trouver la ressource demandée. Vérifiez l\URL puis réessayez.';

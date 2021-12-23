@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
 const db = require('../models/db');
 const User = db.users;
-//const Op = db.Sequelize.Op;
 const { ValidationError, UniqueConstraintError } = require('sequelize');
 const jwt = require('jsonwebtoken');
 const match = require('../utils/regex');
@@ -54,12 +53,13 @@ exports.login = (req, res) => {
                     return res.status(401).json({ status: 'error', message: 'Mot de passe incorrect !' });
                 }
                 const token = jwt.sign(
-                    { userId: user.id },
+                    { userId: user.id, userRole: user.role },
                     process.env.TOKEN_SECRET,
                     { expiresIn: '24h' }
                 );
                 return res.setHeader('Authorization', `Bearer ${token}`).status(200).json({
                     userId: user.id,
+                    userRole: user.role,
                     token,
                     message: `Hello ${user.firstName} !`
                 });
@@ -73,13 +73,14 @@ exports.login = (req, res) => {
 
 exports.getProfile = (req, res) => {
     const userId = req.token.userId;
+    const expToken = req.token.exp;
     // récupère uniquement les éléments utiles (pas le password)
     User.findOne({attributes: ['id', 'firstName', 'lastName', 'email', 'photo', 'role', 'createdAt', 'updatedAt'], where: { id: userId } })
     .then(user => {
         if (!user) {
             return res.status(401).json({ message: 'Utilisateur non trouvé ! Vérifiez vos informations ou créez un compte.' });
         }
-        res.status(200).json({ user });
+        res.status(200).json({ user, expToken: expToken });
     })
     .catch(error => res.status(500).json({ error, message: 'Il y a eu une erreur, réessayez plus tard.' }));
 };
@@ -97,7 +98,7 @@ exports.updateProfile = (req, res) => {
                 }
                 const currentPhoto = user.photo.split('/images/')[1];
                 const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
-                if(currentPhoto !== "base-avatar.png") {
+                if (currentPhoto !== "base-avatar.png") {
                     fs.unlink(`images/${currentPhoto}`, () => {
                         User.update({...req.body, photo: imageUrl, updatedAt: Date.now()}, { where: { id: id } })
                         .then(() => {
@@ -141,7 +142,7 @@ exports.updateProfile = (req, res) => {
         }
     }
     else {
-        res.status(401).json({ message: 'Vous n\'êtes pas autorisé(e) à effectuer cette action.' });
+        res.status(403).json({ message: 'Vous n\'êtes pas autorisé(e) à effectuer cette action.' });
     }
 };
 

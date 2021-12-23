@@ -1,114 +1,39 @@
 .formContainer {
-    max-width: 40vw;
-    min-height: 50vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin: auto;
-    margin-top: 10vh;
-    padding-top: 2.5vh;
-    padding-bottom: 5vh;
+    margin-top: 10vh !important;
+    padding-top: 2.5vh !important;
+    padding-bottom: 5vh !important;
     border-radius: 8px;
-    background-color: rgb(224, 224, 224);
-}
-
-.formContainer-profileUpdate {
-    margin-bottom: 5rem;
-}
-
-.width40vw {
-    width: 40vw;
+    background-color: rgb(240, 240, 240);
 }
 
 .formContainer > h2 {
     margin-bottom: 3rem;
 }
 
-.labelContainer {
-    margin-bottom: .3rem;
-}
-
 input {
     height: 3rem;
-    min-width: 20vw;
+    min-width: 80%;
     outline: none;
     border: none;
     border-radius: 7px;
     text-align: center;
     font-size: 1.1rem;
 }
-input:focus {
-    border: 2px solid rgb(106, 187, 253);
-}
 
-.inputContainer {
-    margin-top: 5px;
-    margin-bottom: 15px;
-}
-.inputContainer > span {
-    display: block;
-}
-
-.paddingTop20px {
-    padding-top: 20px;
+input:focus, textarea:focus {
+    border: 2px solid rgb(106, 187, 253) !important;
+    outline: none !important;
 }
 
 .errorInput {
-    border: 2px solid rgb(189, 0, 0);
+    border: 2px solid rgb(189, 0, 0) !important;
 }
 
 .errorMsg {
     color: rgb(189, 0, 0);
+    min-width: 20vw;
+    max-width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    word-wrap: break-word !important;
 }
-
-.btn {
-    width: 15vw;
-    margin-top: 1rem;
-    padding: 1.5rem;
-    border: none;
-    border-radius: 1rem;
-    text-align: center;
-    font-size: 1rem;
-    text-transform: uppercase;
-    font-weight: bold;
-    background-color: rgb(218, 121, 100);
-    color: #fff;
-    box-shadow: darkgrey 0px 2px 7px;
-    cursor: pointer;
-}
-
-.btn:hover {
-    box-shadow: none;
-    background-color: rgb(121, 58, 29);
-}
-
-.btn:disabled, .btn:disabled:hover {
-    background-color: rgb(160, 160, 160);
-    box-shadow: darkgrey 0px 2px 7px;
-    cursor: not-allowed;
-}
-
-.loginLink {
-    margin-top: 2rem;
-}
-.loginLink > a {
-    font-weight: bold;
-    text-decoration: none;
-    color: rgb(9, 117, 206);
-}
-.loginLink > a:hover {
-    font-weight: bold;
-    text-decoration: underline;
-    color: rgb(12, 76, 129);
-}
-
-@media screen and (max-width: 700px) {
-    input {
-        min-width: 70vw;
-    }
-
-    .btn {
-        width: 50vw;
-    }
-}
-

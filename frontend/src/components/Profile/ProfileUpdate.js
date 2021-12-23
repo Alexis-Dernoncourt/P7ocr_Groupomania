@@ -71,91 +71,99 @@ const ProfileUpdate = ({ setInfoMessage }) => {
 
     
     return (
-        <div className="profileInfoContainer alignItemsCenter">
-            {user.photo && <img className="profilePicture" src={user.photo} alt="profile" />}
+        <div className="columns is-centered mx-0 mt-5">
+            <div className="my-5 column is-three-fifths-desktop is-three-quarters-tablet has-text-centered px-0">
+                <div className="formContainer">
+                    <form onSubmit={handleSubmit} ref={formRef} encType="multipart/form-data">
+                        <h2 className='title is-size-5-mobile is-uppercase has-text-link mx-auto'>Modifier votre profil</h2>
 
-            <form onSubmit={handleSubmit} id="form" ref={formRef} className="width40vw" encType="multipart/form-data">
-                <div className="formContainer formContainer-profileUpdate">
-                    <h2>Modifier votre profil :</h2>
-                    <div className="inputContainer">
-                        <div className="labelContainer">
-                            <label htmlFor="firstName">Votre prénom :</label>
-                        </div>
-                            <input
-                                type="text"
-                                name="firstName"
-                                id="firstName"
-                                placeholder={!firstnameValue ? "Prénom" : firstnameValue}
-                                value={firstnameValue && firstnameValue}
-                                onChange={(e) => setFirstnameValue(e.target.value)}
-                            />
-                    </div>
+                        {user.photo && <div className='mx-auto'><img className="profilePicture" src={user.photo} alt="profile" /></div>}
 
-                    <div className="inputContainer">
-                        <div className="labelContainer">
-                            <label htmlFor="image">Votre nouvelle photo :</label>
+                        <div className="field">
+                            <div className="my-4 mx-auto control">
+                                <div className="label">
+                                    <label htmlFor="firstName">Votre prénom :</label>
+                                </div>
+                                    <input
+                                        type="text"
+                                        name="firstName"
+                                        placeholder={!firstnameValue ? "Prénom" : firstnameValue}
+                                        value={firstnameValue && firstnameValue}
+                                        onChange={(e) => setFirstnameValue(e.target.value)}
+                                    />
+                            </div>
                         </div>
-                            <input
-                                className="paddingTop20px"
-                                type="file"
-                                name="image"
-                                id="image"
-                                ref={imageInput}
-                                accept=".jpg,.jpeg,.png"
-                                onChange={imageChange}
-                            />
-                            {
-                                imageValue && selectedImage &&   
-                                                <div className="profileInfoContainer">
-                                                    <div className="relative">
-                                                        <img className="thumb" src={URL.createObjectURL(selectedImage)} alt="profil" />
-                                                        <span>
-                                                            <button onClick={removeSelectedImage} className="thumbDelete">
-                                                                X
-                                                            </button>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                
-                            }
-                    </div>
-                    
-                    <div className="inputContainer">
-                        <div className="labelContainer">
-                            <label htmlFor="lastName">Votre nom :</label>
+
+                        <div className="field">
+                            <div className="my-4 mx-auto control">
+                                <div className="label">
+                                    <label htmlFor="image">Votre nouvelle photo :</label>
+                                </div>
+                                    <input
+                                        className="pt-4"
+                                        type="file"
+                                        name="image"
+                                        ref={imageInput}
+                                        accept=".jpg,.jpeg,.png"
+                                        onChange={imageChange}
+                                    />
+                                    {
+                                        imageValue && selectedImage &&   
+                                                        <div className="is-flex is-flex-direction-row is-justify-content-center">
+                                                            <div className="relative mt-4">
+                                                                <img className="thumb" src={URL.createObjectURL(selectedImage)} alt="profil" />
+                                                                <span>
+                                                                    <button onClick={removeSelectedImage} className="thumbDelete button is-rounded is-danger">
+                                                                        X
+                                                                    </button>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        
+                                    }
+                            </div>
                         </div>
-                            <input
-                                type="text"
-                                name="lastName"
-                                id="lastName"
-                                placeholder={!lastnameValue ? "Nom" : lastnameValue}
-                                value={lastnameValue && lastnameValue}
-                                onChange={(e) => setLastnameValue(e.target.value)}
-                            />
-                    </div>
-                    
-                    <div className="inputContainer">
-                        <div className="labelContainer">
-                            <label htmlFor="email">Votre email :</label>
+                        
+                        <div className="field">
+                            <div className="my-4 mx-auto control">
+                                <div className="label">
+                                    <label htmlFor="lastName">Votre nom :</label>
+                                </div>
+                                    <input
+                                        type="text"
+                                        name="lastName"
+                                        placeholder={!lastnameValue ? "Nom" : lastnameValue}
+                                        value={lastnameValue && lastnameValue}
+                                        onChange={(e) => setLastnameValue(e.target.value)}
+                                    />
+                            </div>
                         </div>
-                            <input
-                                type="text"
-                                name="email"
-                                id="email"
-                                disabled
-                                placeholder={!user ? "Email" : user.email}
-                            />
-                    </div>
-                    <div>
-                        <button className="btn" type="submit" disabled={ (firstnameValue === user.firstName && lastnameValue === user.lastName) && !imageValue }>
-                            Modifier
-                        </button>
-                    </div>
-                    <div className="loginLink">
-                        <Link to="/profile">Annuler</Link>
-                    </div>
+                        
+                        <div className="field">
+                            <div className="my-4 mx-auto control">
+                                <div className="label">
+                                    <label htmlFor="email">Votre email :</label>
+                                </div>
+                                    <input
+                                        type="text"
+                                        name="email"
+                                        disabled
+                                        placeholder={!user ? "Email" : user.email}
+                                    />
+                            </div>
+                        </div>
+
+                        <div className='mx-auto'>
+                            <button className="button is-rounded is-primary is-medium is-uppercase my-5" type="submit" disabled={ (firstnameValue === user.firstName && lastnameValue === user.lastName) && !imageValue }>
+                                Modifier
+                            </button>
+                        </div>
+                        <div className="mx-auto">
+                            <Link to="/profile" className='button is-rounded is-outlined is-link is-medium is-uppercase'>Annuler</Link>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
     )
 }

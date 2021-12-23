@@ -6,7 +6,7 @@ const RedirectToLogin = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        navigate("/home");
+        navigate("/articles");
     }, [navigate]);
 
     return (

@@ -8,8 +8,8 @@ const Login = ({ infoMessage, setInfoMessage }) => {
     }, []);
 
     return (
-        <div>
-            < LoginForm infoMessage={infoMessage} setInfoMessage={setInfoMessage} />
+        <div className="container">
+            <LoginForm infoMessage={infoMessage} setInfoMessage={setInfoMessage} />
         </div>
     )
 }

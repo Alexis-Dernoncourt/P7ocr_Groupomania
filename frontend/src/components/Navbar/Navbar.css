@@ -1,0 +1,26 @@
+.mw130 {
+    min-width: 130px;
+}
+
+.logoHead {
+    min-height: 6vh;
+    height: 8vh;
+    margin-top: 20px;
+    margin-left: 5vw;
+    filter: hue-rotate(400deg);
+}
+
+.navbar-burger {
+    margin-top: 27px;
+    margin-right: 20px;
+}
+
+.navbar-burger span {
+    height: 2px;
+}
+
+.active {
+    background-color: #3082c5 !important;
+    border-color: transparent !important;
+    color: #fff !important;
+}
