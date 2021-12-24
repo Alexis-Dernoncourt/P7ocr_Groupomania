@@ -14,6 +14,7 @@ const ArticlesByUserView = ({ infoMessage, setInfoMessage }) => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        let cancel = false;
         fetch(`/api/posts/all-posts/${userId}`, {
             headers: {
                 'Authorization': token
@@ -21,10 +22,15 @@ const ArticlesByUserView = ({ infoMessage, setInfoMessage }) => {
         })
         .then(res => res.json())
         .then(articles => {
+            if (cancel) return;
             setData(articles.posts);
             setUserRole(articles.user_role);
         })
         .catch(console.log('Il y a eu une erreur'))
+
+        return () => { 
+            cancel = true;
+        }
     }, [token, userId, idOfArticleToDelete]);
 
     const handleDelete = (id) => {

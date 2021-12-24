@@ -27,6 +27,7 @@ const ArticleByIdView = ({ infoMessage, setInfoMessage }) => {
     const articleId = params.id;
 
     useEffect(() => {
+        let cancel = false;
         fetch(`/api/posts/${articleId}`, {
             headers: {
                 'Authorization': token
@@ -35,6 +36,7 @@ const ArticleByIdView = ({ infoMessage, setInfoMessage }) => {
         })
         .then(res => res.json())
         .then(article => {
+            if (cancel) return;
             if (article.message) {
                 setInfoMessage(article.message);
             }
@@ -42,6 +44,10 @@ const ArticleByIdView = ({ infoMessage, setInfoMessage }) => {
             setUserRole(article.user_role);
         })
         .catch(console.log('Il y a eu une erreur'))
+
+        return () => { 
+            cancel = true;
+        }
     }, [token, articleId, setInfoMessage, arrayOfSignaledPosts, arrayOfSignaledComments, arrayOfModeratededPosts, arrayOfDeletedPosts, arrayOfDeletedComments, arrayOfNewComment, likedPost, unlikedPost, commentToModify]);
 
     const signalPost = (id) => {

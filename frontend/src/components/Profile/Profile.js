@@ -13,6 +13,7 @@ const Profile = ({ infoMessage, setInfoMessage }) => {
     }, []);
 
     useEffect(() => {
+        let cancel = false;
         fetch('/api/auth/profile', {
             headers: {
                 'Authorization': localStorage.getItem('token') && localStorage.getItem('token')
@@ -20,12 +21,17 @@ const Profile = ({ infoMessage, setInfoMessage }) => {
         })
         .then(res => res.json())
         .then(data => { 
+            if (cancel) return;
             setUser(data.user);
             if (!localStorage.getItem('expToken')) {
                 localStorage.setItem('expToken', data.expToken);
             }
         })
         .catch(console.log('erreur'))
+
+        return () => { 
+            cancel = true;
+        }
     }, [setUser]);
 
 

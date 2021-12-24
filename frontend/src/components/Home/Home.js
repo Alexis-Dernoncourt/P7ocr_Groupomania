@@ -38,6 +38,7 @@ const Home = ({ infoMessage, setInfoMessage }) => {
     }, [showModal]);
 
     useEffect(() => {
+        let cancel = false;
         fetch("/api/posts", {
             headers: {
                 'Authorization': token
@@ -45,10 +46,15 @@ const Home = ({ infoMessage, setInfoMessage }) => {
         })
         .then(res => res.json())
         .then(data => {
+            if (cancel) return;
             setData(data.posts);
             setUserRole(data.user_role);
         })
         .catch(console.log('Il y a eu une erreur'))
+
+        return () => { 
+            cancel = true;
+        }
     }, [token, arrayOfSignaledPosts, arrayOfModeratededPosts, showModal, arrayOfDeletedPosts, arrayOfSignaledComments, arrayOfNewComment, arrayOfDeletedComments, likedPost, unlikedPost, commentToModify]);
 
     const signalPost = (id) => {
