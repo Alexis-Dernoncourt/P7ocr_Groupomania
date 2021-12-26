@@ -29,7 +29,7 @@ const PostCommentForm = ({ postId, arrayOfNewComment, setArrayOfNewComment, setI
         .then(postedComment => {
             setContent('');
             setImgLink('');
-            setArrayOfNewComment(...arrayOfNewComment, content);
+            setArrayOfNewComment([...arrayOfNewComment, content]);
             setInfoMessage(postedComment.message);
         })
         .catch(error => console.log(error))

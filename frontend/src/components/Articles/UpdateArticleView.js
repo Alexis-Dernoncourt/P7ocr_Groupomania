@@ -4,6 +4,7 @@ import { Formik } from 'formik';
 import match from '../../utils/regex';
 //import '../SignupForm/SignupForm.css';
 import './PostArticleForm.css';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 
 const UpdateArticleView = ({ setInfoMessage }) => {
 
@@ -116,7 +117,7 @@ const UpdateArticleView = ({ setInfoMessage }) => {
                 {
                 !article ?
                 <div className='my-6'>
-                    <button className="button is-info is-loading is-large is-outlined noborders is-block mx-auto mb-4">Loading</button>
+                    <LoadingSpinner />
                 </div>
 
                 :

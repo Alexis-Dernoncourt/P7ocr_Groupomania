@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import ModifyCommentForm from './ModifyCommentForm';
 import DeleteCommentConfirmBtn from './DeleteCommentConfirmBtn';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 
 const CommentsComponent = ({ comments, arrayOfSignaledComments, setArrayOfSignaledComments, arrayOfDeletedComments, setArrayOfDeletedComments, userRole, arrayOfNewComment, setArrayOfNewComment, commentToModify, setCommentToModify, idOfCommentToDelete, setIdOfCommentToDelete, setInfoMessage }) => {
     const userId = parseInt(localStorage.getItem('user_id'));
@@ -30,7 +31,7 @@ const CommentsComponent = ({ comments, arrayOfSignaledComments, setArrayOfSignal
         .catch(console.log('Il y a eu une erreur'))
     };
 
-    const showDeleteCommentForm = (id) => {
+    const showDeleteCommentConfirm = (id) => {
         setShowDeleteCommentConfirmBtn(true);
         setIdOfCommentToDelete(id);
     };
@@ -46,12 +47,14 @@ const CommentsComponent = ({ comments, arrayOfSignaledComments, setArrayOfSignal
             {
                 !commentsData ?
                 <div className='my-6'>
-                    <button className="button is-info is-loading is-large is-outlined noborders is-block mx-auto mb-4">Loading</button>
+                    <LoadingSpinner />
                 </div>
 
                 :
 
-                commentsData.map((el, i) => {
+                commentsData
+                .sort((a, b) => a.id - b.id)
+                .map((el, i) => {
                     return  <article className="container media" key={`${el.id}-${i}`}>
                                 <figure className="media-left">
                                     <p className="is-48x48">
@@ -87,9 +90,9 @@ const CommentsComponent = ({ comments, arrayOfSignaledComments, setArrayOfSignal
                                         {
                                             (el.userId === userId || userRole === 'moderator') &&
                                             <>
-                                            <button onClick={() => showDeleteCommentForm(el.id)} className='button is-light is-small has-text-danger-dark mx-4'>Supprimer</button>
+                                            <button onClick={() => showDeleteCommentConfirm(el.id)} className='button is-light is-small has-text-danger-dark mx-4'>Supprimer</button>
 
-                                            <DeleteCommentConfirmBtn comment_id={el.id} showDeleteCommentConfirmBtn={showDeleteCommentConfirmBtn} setShowDeleteCommentConfirmBtn={setShowDeleteCommentConfirmBtn} setIdOfCommentToDelete={setIdOfCommentToDelete} arrayOfDeletedComments={arrayOfDeletedComments} setArrayOfDeletedComments={setArrayOfDeletedComments} pathToRedirect={location.pathname} setInfoMessage={setInfoMessage} />
+                                            <DeleteCommentConfirmBtn comment_id={idOfCommentToDelete} showDeleteCommentConfirmBtn={showDeleteCommentConfirmBtn} setShowDeleteCommentConfirmBtn={setShowDeleteCommentConfirmBtn} arrayOfDeletedComments={arrayOfDeletedComments} setArrayOfDeletedComments={setArrayOfDeletedComments} pathToRedirect={location.pathname} setInfoMessage={setInfoMessage} />
                                             </>
                                         }
 

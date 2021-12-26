@@ -5,6 +5,7 @@ import CommentsComponent from '../Comments/CommentsComponent';
 import PostCommentForm from '../Comments/PostCommentForm';
 import DeleteArticleBtn from '../DeleteArticleBtn/DeleteArticleBtn';
 import LikesComponent from '../Likes/LikesComponent';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 
 import './Home.css';
 
@@ -22,8 +23,8 @@ const Home = ({ infoMessage, setInfoMessage }) => {
     const [showModal, setShowModal] = useState(false);
     const [showDeleteArticleConfirmBtn, setShowDeleteArticleConfirmBtn] = useState(false);
     const [idOfArticleToDelete, setIdOfArticleToDelete] = useState(null);
-    const [commentToModify, setCommentToModify] = useState({});
     const [idOfCommentToDelete, setIdOfCommentToDelete] = useState(null);
+    const [commentToModify, setCommentToModify] = useState({});
     const location = useLocation();
     const navigate = useNavigate();
     const token = localStorage.getItem('token');
@@ -38,6 +39,7 @@ const Home = ({ infoMessage, setInfoMessage }) => {
     }, [showModal]);
 
     useEffect(() => {
+        let cancel = false;
         fetch("/api/posts", {
             headers: {
                 'Authorization': token
@@ -45,10 +47,15 @@ const Home = ({ infoMessage, setInfoMessage }) => {
         })
         .then(res => res.json())
         .then(data => {
+            if (cancel) return;
             setData(data.posts);
             setUserRole(data.user_role);
         })
         .catch(console.log('Il y a eu une erreur'))
+
+        return () => { 
+            cancel = true;
+        }
     }, [token, arrayOfSignaledPosts, arrayOfModeratededPosts, showModal, arrayOfDeletedPosts, arrayOfSignaledComments, arrayOfNewComment, arrayOfDeletedComments, likedPost, unlikedPost, commentToModify]);
 
     const signalPost = (id) => {
@@ -123,7 +130,7 @@ const Home = ({ infoMessage, setInfoMessage }) => {
             {
                 !data ? 
                 <div className='my-6'>
-                    <button className="button is-info is-loading is-large is-outlined noborders is-block mx-auto mb-4">Loading</button>
+                    <LoadingSpinner />
                 </div>
                 :
                 

@@ -1,6 +1,8 @@
 import 'bulma/css/bulma.min.css';
 import { useState } from 'react';
 import {Routes, Route} from "react-router-dom";
+import AuthContextProvider from './context/AuthContext';
+import ProtectedRoutes from './ProtectedRoutes';
 import Navbar from './components/Navbar/Navbar';
 import Signup from './components/Signup/Signup';
 import Login from './components/Login/Login';
@@ -8,8 +10,6 @@ import Home from './components/Home/Home';
 import RedirectToLogin from './components/Home/RedirectToLogin';
 import Profile from './components/Profile/Profile';
 import ProfileUpdate from './components/Profile/ProfileUpdate';
-import AuthContextProvider from './context/AuthContext';
-import ProtectedRoutes from './ProtectedRoutes';
 import ArticleByIdView from './components/Articles/ArticleByIdView';
 import UpdateArticleView from './components/Articles/UpdateArticleView';
 import AdminPageView from './components/Admin/AdminPageView';

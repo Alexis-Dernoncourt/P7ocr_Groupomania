@@ -28,7 +28,7 @@ const ModifyCommentForm = ({ commentId, setShowModifyForm, commentToModify, setC
         .then(postedComment => {
             setContent('');
             setImgLink('');
-            setArrayOfNewComment(...arrayOfNewComment, content);
+            setArrayOfNewComment([...arrayOfNewComment, content]);
             setInfoMessage(postedComment.message);
             setCommentToModify({});
             setShowModifyForm(false);

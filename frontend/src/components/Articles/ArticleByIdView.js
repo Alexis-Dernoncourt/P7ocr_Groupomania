@@ -4,6 +4,7 @@ import CommentsComponent from '../Comments/CommentsComponent';
 import DeleteArticleBtn from '../DeleteArticleBtn/DeleteArticleBtn';
 import PostCommentForm from '../Comments/PostCommentForm';
 import LikesComponent from '../Likes/LikesComponent';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 
 const ArticleByIdView = ({ infoMessage, setInfoMessage }) => {
     const [article, setArticle] = useState(null);
@@ -27,6 +28,7 @@ const ArticleByIdView = ({ infoMessage, setInfoMessage }) => {
     const articleId = params.id;
 
     useEffect(() => {
+        let cancel = false;
         fetch(`/api/posts/${articleId}`, {
             headers: {
                 'Authorization': token
@@ -35,6 +37,7 @@ const ArticleByIdView = ({ infoMessage, setInfoMessage }) => {
         })
         .then(res => res.json())
         .then(article => {
+            if (cancel) return;
             if (article.message) {
                 setInfoMessage(article.message);
             }
@@ -42,6 +45,10 @@ const ArticleByIdView = ({ infoMessage, setInfoMessage }) => {
             setUserRole(article.user_role);
         })
         .catch(console.log('Il y a eu une erreur'))
+
+        return () => { 
+            cancel = true;
+        }
     }, [token, articleId, setInfoMessage, arrayOfSignaledPosts, arrayOfSignaledComments, arrayOfModeratededPosts, arrayOfDeletedPosts, arrayOfDeletedComments, arrayOfNewComment, likedPost, unlikedPost, commentToModify]);
 
     const signalPost = (id) => {
@@ -96,7 +103,7 @@ const ArticleByIdView = ({ infoMessage, setInfoMessage }) => {
             {
                 !article ? 
                 <div className='my-6'>
-                    <button className="button is-info is-loading is-large is-outlined noborders is-block mx-auto mb-4">Loading</button>
+                    <LoadingSpinner />
                 </div>
                 :
                 

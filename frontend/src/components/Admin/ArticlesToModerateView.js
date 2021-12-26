@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import DeleteArticleBtn from '../DeleteArticleBtn/DeleteArticleBtn';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 
 
 const ArticlesToModerateView = ({ infoMessage, setInfoMessage }) => {
@@ -70,8 +71,8 @@ const ArticlesToModerateView = ({ infoMessage, setInfoMessage }) => {
         <div className='container my-6 py-5'>
             {infoMessage && <div className='infoMessage'><p>{infoMessage}</p></div>}
         
-            {!data && userRole !== 'moderator' ? 
-                <button className="button is-info is-loading is-large is-outlined noborders is-block mx-auto mb-4">Loading</button>
+            {!data && userRole !== 'moderator' ?
+                <LoadingSpinner />
             :
                 data.map(el => {
                 return  <div className="columns box is-desktop m-5 card-shadow" key={`${el.createdAt}-${el.id}`}>

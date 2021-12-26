@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-const DeleteCommentConfirmBtn = ({ comment_id, showDeleteCommentConfirmBtn, setShowDeleteCommentConfirmBtn, setIdOfCommentToDelete, arrayOfDeletedComments, setArrayOfDeletedComments, pathToRedirect, setInfoMessage }) => {
+const DeleteCommentConfirmBtn = ({ comment_id, showDeleteCommentConfirmBtn, setShowDeleteCommentConfirmBtn, arrayOfDeletedComments, setArrayOfDeletedComments, pathToRedirect, setInfoMessage }) => {
 
     const navigate = useNavigate();
 
@@ -15,7 +15,6 @@ const DeleteCommentConfirmBtn = ({ comment_id, showDeleteCommentConfirmBtn, setS
         .then(response => {
             setArrayOfDeletedComments([...arrayOfDeletedComments, comment_id]);
             setShowDeleteCommentConfirmBtn(false);
-            setIdOfCommentToDelete(null);
             navigate(pathToRedirect);
             setInfoMessage(response.message);
         })
@@ -24,7 +23,6 @@ const DeleteCommentConfirmBtn = ({ comment_id, showDeleteCommentConfirmBtn, setS
 
     const hide = () => {
         setShowDeleteCommentConfirmBtn(false);
-        setIdOfCommentToDelete(null);
     };
 
 
