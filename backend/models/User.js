@@ -19,7 +19,7 @@ module.exports = (sequelize) => {
                 msg: 'Uniquement des caractères - avec espace(s) et/ou tiret(s) (les chiffres et caractères spéciaux ne sont pas autoriés)'
             },
             not: {
-                args: [/^select$|^get$|^delete$|script|put1|putain|putin|pute|fdp|pd|^ducon$|con$|conne$|^connasse$|garce|^batar|bâtard|^encul|enkul|enqul|^salau|^bite$|^cul|couille|^chier$|dugland|glandu/i],
+                args: [/select$|'select|localStorage|get|'get|'delete|delete|<script$|script>|<script>|alert\(|put1|putain|putin|pute|fdp|pd|^ducon$|con$|conne$|^connasse$|garce|^batar|bâtard|^encul|enkul|enqul|^salau|^bite$|^cul|couille|^chier$|dugland|glandu/i],
                 msg: 'Votre message contient des insultes ou mot(s) interdit(s), veuillez le corriger...'
             },
             notEmpty: {msg: 'Ce champs ne doit pas être vide.'},
@@ -43,7 +43,7 @@ module.exports = (sequelize) => {
                 msg: 'Uniquement des caractères - avec espace(s) et/ou tiret(s) (les chiffres et caractères spéciaux ne sont pas autoriés)'
             },
             not: {
-                args: [/^select$|^get$|^delete$|script|put1|putain|putin|pute|fdp|pd|^ducon$|con$|conne$|^connasse$|garce|^batar|bâtard|^encul|enkul|enqul|^salau|^bite$|^cul|couille|^chier$|dugland|glandu/i],
+                args: [/select$|'select|localStorage|get|'get|'delete|delete|<script$|script>|<script>|alert\(|put1|putain|putin|pute|fdp|pd|^ducon$|con$|conne$|^connasse$|garce|^batar|bâtard|^encul|enkul|enqul|^salau|^bite$|^cul|couille|^chier$|dugland|glandu/i],
                 msg: 'Votre message contient des insultes ou mot(s) interdit(s), veuillez le corriger...'
             },
             notEmpty: {msg: 'Ce champs ne doit pas être vide.'},
@@ -67,7 +67,7 @@ module.exports = (sequelize) => {
             notEmpty: {msg: 'Ce champs ne doit pas être vide.'},
             notNull: {msg: 'Ce champs est requis.'},
             not: {
-                args: [/^select$|^get$|^delete$|script|put1|putain|putin|pute|fdp|pd|^ducon$|con$|conne$|^connasse$|garce|^batar|bâtard|^encul|enkul|enqul|^salau|^bite$|^cul|couille|^chier$|dugland|glandu/i],
+                args: [/select$|'select|localStorage|get|'get|'delete|delete|<script$|script>|<script>|alert\(|put1|putain|putin|pute|fdp|pd|^ducon$|con$|conne$|^connasse$|garce|^batar|bâtard|^encul|enkul|enqul|^salau|^bite$|^cul|couille|^chier$|dugland|glandu/i],
                 msg: 'Votre message contient des insultes ou mot(s) interdit(s), veuillez le corriger...'
             }
         }
@@ -80,7 +80,7 @@ module.exports = (sequelize) => {
             notEmpty: {msg: 'Ce champs ne doit pas être vide.'},
             notNull: {msg: 'Ce champs est requis.'},
             not: {
-                args: [/^select$|^get$|^delete$|script|put1|putain|putin|pute|fdp|pd|^ducon$|con$|conne$|^connasse$|garce|^batar|bâtard|^encul|enkul|enqul|^salau|^bite$|^cul|couille|^chier$|dugland|glandu/i],
+                args: [/select$|'select|localStorage|get|'get|'delete|delete|<script$|script>|<script>|alert\(|put1|putain|putin|pute|fdp|pd|^ducon$|con$|conne$|^connasse$|garce|^batar|bâtard|^encul|enkul|enqul|^salau|^bite$|^cul|couille|^chier$|dugland|glandu/i],
                 msg: 'Votre message contient des insultes ou mot(s) interdit(s), veuillez le corriger...'
             }
         }
@@ -90,7 +90,7 @@ module.exports = (sequelize) => {
         defaultValue: "http://localhost:4000/images/base-avatar.png",
         validate: {
             not: {
-                args: [/^select$|^get$|^delete$|script|put1|putain|putin|pute|fdp|pd|^ducon$|con$|conne$|^connasse$|garce|^batar|bâtard|^encul|enkul|enqul|^salau|^bite$|^cul|couille|^chier$|dugland|glandu/i],
+                args: [/select$|'select|localStorage|get|'get|'delete|delete|<script$|script>|<script>|alert\(|put1|putain|putin|pute|fdp|pd|^ducon$|con$|conne$|^connasse$|garce|^batar|bâtard|^encul|enkul|enqul|^salau|^bite$|^cul|couille|^chier$|dugland|glandu/i],
                 msg: 'Votre message contient des insultes ou mot(s) interdit(s), veuillez le corriger...'
             }
         }

@@ -5,6 +5,7 @@ import CommentsComponent from '../Comments/CommentsComponent';
 import PostCommentForm from '../Comments/PostCommentForm';
 import DeleteArticleBtn from '../DeleteArticleBtn/DeleteArticleBtn';
 import LikesComponent from '../Likes/LikesComponent';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 
 import './Home.css';
 
@@ -22,8 +23,8 @@ const Home = ({ infoMessage, setInfoMessage }) => {
     const [showModal, setShowModal] = useState(false);
     const [showDeleteArticleConfirmBtn, setShowDeleteArticleConfirmBtn] = useState(false);
     const [idOfArticleToDelete, setIdOfArticleToDelete] = useState(null);
-    const [commentToModify, setCommentToModify] = useState({});
     const [idOfCommentToDelete, setIdOfCommentToDelete] = useState(null);
+    const [commentToModify, setCommentToModify] = useState({});
     const location = useLocation();
     const navigate = useNavigate();
     const token = localStorage.getItem('token');
@@ -129,7 +130,7 @@ const Home = ({ infoMessage, setInfoMessage }) => {
             {
                 !data ? 
                 <div className='my-6'>
-                    <button className="button is-info is-loading is-large is-outlined noborders is-block mx-auto mb-4">Loading</button>
+                    <LoadingSpinner />
                 </div>
                 :
                 

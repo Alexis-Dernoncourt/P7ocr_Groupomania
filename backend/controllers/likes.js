@@ -4,9 +4,8 @@ const User = db.users;
 const Comment = db.comments;
 const Like = db.likes;
 const { ValidationError } = require('sequelize');
-//const Op = db.Sequelize.Op;
 
-exports.getLikes = (req, res, next) => {
+exports.getLikes = (req, res) => {
     if (Object.keys(req.query).length === 1) {
 
         if (req.query.post_id) {

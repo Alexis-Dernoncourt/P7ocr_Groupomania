@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import DeleteArticleBtn from '../DeleteArticleBtn/DeleteArticleBtn';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 
 const ArticlesByUserView = ({ infoMessage, setInfoMessage }) => {
     const [data, setData] = useState(null);
@@ -49,8 +50,8 @@ const ArticlesByUserView = ({ infoMessage, setInfoMessage }) => {
     return (
         <div className='overflow'>
             {infoMessage && <div className='infoMessage'><p>{infoMessage}</p></div>}
-            {!data ? 
-                <button className="button is-info is-loading is-large is-outlined noborders is-block mx-auto mb-4">Loading</button>
+            {!data ?
+                <LoadingSpinner />
             :
                 data.map(el => {
                 return  <div className="columns box is-desktop m-5 card-shadow" key={`${el.createdAt}-${el.id}`}>

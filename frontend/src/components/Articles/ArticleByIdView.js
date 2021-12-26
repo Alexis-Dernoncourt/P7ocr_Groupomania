@@ -4,6 +4,7 @@ import CommentsComponent from '../Comments/CommentsComponent';
 import DeleteArticleBtn from '../DeleteArticleBtn/DeleteArticleBtn';
 import PostCommentForm from '../Comments/PostCommentForm';
 import LikesComponent from '../Likes/LikesComponent';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 
 const ArticleByIdView = ({ infoMessage, setInfoMessage }) => {
     const [article, setArticle] = useState(null);
@@ -102,7 +103,7 @@ const ArticleByIdView = ({ infoMessage, setInfoMessage }) => {
             {
                 !article ? 
                 <div className='my-6'>
-                    <button className="button is-info is-loading is-large is-outlined noborders is-block mx-auto mb-4">Loading</button>
+                    <LoadingSpinner />
                 </div>
                 :
                 

@@ -35,7 +35,7 @@ app.use('/api/comments', commentsRoutes);
 app.use('/api/likes', likesRoutes);
 
 app.use(({res}) => {
-    const message = 'Impoosible de trouver la ressource demandée. Vérifiez l\URL puis réessayez.';
+    const message = 'Impoosible de trouver la ressource demandée. Vérifiez l\'URL puis réessayez.';
     res.status(404).json({message});
 })
 

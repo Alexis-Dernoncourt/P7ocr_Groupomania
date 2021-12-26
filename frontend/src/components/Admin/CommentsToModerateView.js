@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import DeleteCommentConfirmBtn from '../Comments/DeleteCommentConfirmBtn';
-//import { useNavigate, useLocation } from 'react-router-dom';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 
 const CommentsToModerateView = ({ infoMessage, setInfoMessage }) => {
     const [comments, setComments] = useState([]);
@@ -87,8 +87,8 @@ const CommentsToModerateView = ({ infoMessage, setInfoMessage }) => {
                 <p className='has-text-centered is-size-4 has-text-danger-dark mb-6'>Il y a {totalOfSignaledComments} commentaires signalés à vérifier</p>
             }
 
-            {!comments && userRole !== 'moderator' ? 
-                <button className="button is-info is-loading is-large is-outlined noborders is-block mx-auto mb-4">Loading</button>
+            {!comments && userRole !== 'moderator' ?
+                <LoadingSpinner />
             :
             comments.map(el => {
                 return  <div className="columns box is-desktop m-5 card-shadow" key={`${el.createdAt}-${el.id}`}>

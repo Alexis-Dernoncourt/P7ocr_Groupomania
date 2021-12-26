@@ -3,10 +3,9 @@ const Post = db.posts;
 const User = db.users;
 const Comment = db.comments;
 const Like = db.likes;
-const { ValidationError, UniqueConstraintError } = require('sequelize');
+const { ValidationError } = require('sequelize');
 const fs = require('fs');
 const Op = db.Sequelize.Op;
-//const match = require('../utils/regex');
 
 exports.getAllPosts = (req, res) => {
     const user_role = req.token.userRole;

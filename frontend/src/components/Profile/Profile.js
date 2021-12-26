@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ArticlesByUserView from '../Articles/ArticlesByUserView';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import DeleteConfirmBtn from './DeleteConfirmBtn';
 import './Profile.css';
 
@@ -51,7 +52,7 @@ const Profile = ({ infoMessage, setInfoMessage }) => {
             {infoMessage && <div className='infoMessage'><p>{infoMessage}</p></div>}
                 {
                     !user ? 
-                        <button className="button is-info is-loading is-large is-outlined noborders is-block mx-auto mb-4">Loading</button>
+                        <LoadingSpinner />
                     :
                     (
                         <div className='mx-5 column'>
