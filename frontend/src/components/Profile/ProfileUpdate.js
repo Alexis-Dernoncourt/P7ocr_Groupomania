@@ -10,6 +10,7 @@ const ProfileUpdate = ({ setInfoMessage }) => {
     const [lastnameValue, setLastnameValue] = useState("");
     const [imageValue, setImageValue] = useState("");
     const [selectedImage, setSelectedImage] = useState();
+    const userId = localStorage.getItem('user_id');
 
     const imageInput = useRef("");
 
@@ -34,7 +35,7 @@ const ProfileUpdate = ({ setInfoMessage }) => {
     }, []);
     
     useEffect(() => {
-        fetch('/api/auth/profile', {
+        fetch(`/api/auth/${userId}`, {
             headers: {
                 'Authorization': localStorage.getItem('token') && localStorage.getItem('token')
             }
@@ -46,13 +47,13 @@ const ProfileUpdate = ({ setInfoMessage }) => {
             setLastnameValue(data.user.lastName);
         })
         .catch(console.log('erreur'))
-    }, []);
+    }, [userId]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
         const form = formRef.current;
 
-        fetch(`/api/auth/profile-update/${user.id}`, {
+        fetch(`/api/auth/${user.id}`, {
             headers: {
                 'Authorization': localStorage.getItem('token') && localStorage.getItem('token')
             },

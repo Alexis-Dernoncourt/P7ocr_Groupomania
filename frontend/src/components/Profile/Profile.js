@@ -8,6 +8,7 @@ import './Profile.css';
 const Profile = ({ infoMessage, setInfoMessage }) => {
     const [user, setUser] = useState(null);
     const [showDeleteBtn, setShowDeleteBtn] = useState(false);
+    const userId = localStorage.getItem('user_id');
 
     useEffect(() => {
         document.title = 'Groupomania - Votre profil';
@@ -15,7 +16,7 @@ const Profile = ({ infoMessage, setInfoMessage }) => {
 
     useEffect(() => {
         let cancel = false;
-        fetch('/api/auth/profile', {
+        fetch(`/api/auth/${userId}`, {
             headers: {
                 'Authorization': localStorage.getItem('token') && localStorage.getItem('token')
             }
@@ -33,7 +34,7 @@ const Profile = ({ infoMessage, setInfoMessage }) => {
         return () => { 
             cancel = true;
         }
-    }, [setUser]);
+    }, [setUser, userId]);
 
 
     const handleDelete = () => {

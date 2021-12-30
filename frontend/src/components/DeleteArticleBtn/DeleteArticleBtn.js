@@ -5,7 +5,7 @@ const DeleteArticleBtn = ({ post_id, showDeleteArticleConfirmBtn, setShowDeleteA
     const navigate = useNavigate();
 
     const deleteArticle = () => {
-        fetch(`/api/posts/delete/${post_id}`, {
+        fetch(`/api/posts/${post_id}`, {
             headers: {
                 'Authorization': localStorage.getItem('token') && localStorage.getItem('token')
             },
@@ -13,6 +13,7 @@ const DeleteArticleBtn = ({ post_id, showDeleteArticleConfirmBtn, setShowDeleteA
         })
         .then(data => data.json())
         .then(response => {
+            console.log(response);
             setArrayOfDeletedPosts([...arrayOfDeletedPosts, post_id]);
             setShowDeleteArticleConfirmBtn(false);
             setIdOfArticleToDelete(null);

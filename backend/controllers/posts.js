@@ -66,7 +66,7 @@ exports.getAllPosts = (req, res) => {
 };
 
 exports.getUserPosts = (req, res) => {
-    const userId = parseInt(req.params.id);
+    const userId = parseInt(req.params.userId);
     const tokenID = req.token.userId;
     const user_role = req.token.userRole;
     
