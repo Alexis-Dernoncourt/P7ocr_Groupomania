@@ -1,7 +1,10 @@
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 
 const DeleteConfirmBtn = ({user, setUser, showDeleteBtn, setShowDeleteBtn, setInfoMessage}) => {
 
+    const {setAuth} = useContext(AuthContext);
     const navigate = useNavigate();
 
     const hide = () => {
@@ -9,19 +12,20 @@ const DeleteConfirmBtn = ({user, setUser, showDeleteBtn, setShowDeleteBtn, setIn
     };
 
     const deleteOk = () => {
-        fetch(`/api/auth/profile-delete/${user.id}`, {
+        fetch(`/api/auth/${user.id}`, {
             headers: {
                 'Authorization': localStorage.getItem('token') && localStorage.getItem('token')
             },
             method: 'DELETE'
         })
         .then(data => data.json())
-        .then((response) => {
+        .then(response => {
             setInfoMessage(response.message);
-            setUser();
             localStorage.removeItem('token');
             localStorage.removeItem('user_id');
             localStorage.removeItem('expToken');
+            setUser(false);
+            setAuth(false);
             navigate("/login");
         })
         .catch(() => setInfoMessage('Il y a eu une erreur. Réessayez plus tard.'))        

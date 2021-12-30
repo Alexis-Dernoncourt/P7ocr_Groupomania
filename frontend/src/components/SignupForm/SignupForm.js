@@ -13,7 +13,7 @@ const SignupForm = ({ setInfoMessage }) => {
 
     useEffect(() => {
         if (auth) {
-            navigate('/home');
+            navigate('/articles');
         }
     }, [auth, navigate]);
 

@@ -16,7 +16,7 @@ const ArticlesByUserView = ({ infoMessage, setInfoMessage }) => {
 
     useEffect(() => {
         let cancel = false;
-        fetch(`/api/posts/all-posts/${userId}`, {
+        fetch(`/api/posts/user-posts/${userId}`, {
             headers: {
                 'Authorization': token
             }
