@@ -18,7 +18,7 @@ const LikesComponent = ({ likes, setLikedPost, setUnlikedPost, postId, setInfoMe
     };
 
     const unlikePost = () => {
-        fetch(`/api/likes/delete?post_id=${postId}`, {
+        fetch(`/api/likes/unlike?post_id=${postId}`, {
             headers: {
                 'Authorization': token,
                 'Content-Type': 'application/json'
@@ -35,7 +35,7 @@ const LikesComponent = ({ likes, setLikedPost, setUnlikedPost, postId, setInfoMe
     };
 
     const likePost = () => {
-        fetch(`/api/likes/add?post_id=${postId}`, {
+        fetch(`/api/likes/like?post_id=${postId}`, {
             headers: {
                 'Authorization': token,
                 'Content-Type': 'application/json'
