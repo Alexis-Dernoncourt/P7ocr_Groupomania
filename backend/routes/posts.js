@@ -7,7 +7,7 @@ const postCtrl = require('../controllers/posts');
 
 router.get('/', auth, postCtrl.getAllPosts); 
 router.get('/:id', auth, postCtrl.getPostById);
-router.get('/user-posts/:userId', auth, postCtrl.getUserPosts); //récupère tous les posts de l'utilisateur connecté via son id pour affichage dans son espace personnel
+router.get('/user/:userId', auth, postCtrl.getUserPosts); //récupère tous les posts de l'utilisateur connecté via son id pour affichage dans son espace personnel
 
 router.post('/', auth, upload.single('image'), postCtrl.createPost);
 router.put('/:id', auth, upload.single('image'), postCtrl.updatePost);

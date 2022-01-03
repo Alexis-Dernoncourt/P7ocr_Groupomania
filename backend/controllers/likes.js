@@ -63,7 +63,7 @@ exports.getLikes = (req, res) => {
     }
 };
 
-exports.addLikes = (req, res) => {
+exports.addLike = (req, res) => {
     const userId = parseInt(req.body.userId);
     
     if (userId === req.token.userId) {
@@ -101,7 +101,7 @@ exports.addLikes = (req, res) => {
                 return res.status(403).json({ message: 'Déjà liké !'})
             })
             .catch(error => {
-                res.status(400).json({ message: 'Il y a eu une erreur. Veuillez réessayer.'})
+                res.status(400).json({ error, message: 'Il y a eu une erreur. Veuillez réessayer.'})
             })
         } else if (req?.query?.comment_id) {
         // Ajour d'un like à un commentaire
@@ -145,14 +145,15 @@ exports.addLikes = (req, res) => {
     }
 };
 
-exports.deleteLikes = (req, res) => {
+exports.deleteLike = (req, res) => {
     const userId = parseInt(req.body.userId);
+    console.log(req.query, typeof req.token.userId);
     
     if (userId === req.token.userId) {
         if (!req.query) {
             return res.status(401).json({ message: 'Les données semblent absentes. Vérifiez vos informations puis réessayez.' });
         }
-        // Ajout d'un like à un post
+        // Suppression d'un like à un post
         if (req?.query?.post_id) {
             const postId = parseInt(req.query.post_id);
             
@@ -179,7 +180,7 @@ exports.deleteLikes = (req, res) => {
                 res.status(400).json({ error, message: 'Il y a eu une erreur. Veuillez réessayer.'})
             })
         } else if (req?.query?.comment_id) {
-        // Ajour d'un like à un commentaire
+        // Suppression d'un like à un commentaire
 
             const commentId = parseInt(req.query.comment_id);
             
