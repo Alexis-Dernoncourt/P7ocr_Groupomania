@@ -147,7 +147,6 @@ exports.addLike = (req, res) => {
 
 exports.deleteLike = (req, res) => {
     const userId = parseInt(req.body.userId);
-    console.log(req.query, typeof req.token.userId);
     
     if (userId === req.token.userId) {
         if (!req.query) {
