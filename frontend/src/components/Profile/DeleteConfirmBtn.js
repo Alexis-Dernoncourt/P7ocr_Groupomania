@@ -12,7 +12,7 @@ const DeleteConfirmBtn = ({user, setUser, showDeleteBtn, setShowDeleteBtn, setIn
     };
 
     const deleteOk = () => {
-        fetch(`/api/auth/${user.id}`, {
+        fetch(`/api/user/${user.id}`, {
             headers: {
                 'Authorization': localStorage.getItem('token') && localStorage.getItem('token')
             },

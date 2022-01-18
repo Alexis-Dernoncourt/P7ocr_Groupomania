@@ -16,7 +16,7 @@ const Profile = ({ infoMessage, setInfoMessage }) => {
 
     useEffect(() => {
         let cancel = false;
-        fetch(`/api/auth/${userId}`, {
+        fetch(`/api/user/${userId}`, {
             headers: {
                 'Authorization': localStorage.getItem('token') && localStorage.getItem('token')
             }

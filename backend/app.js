@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require("path");
 const db = require('./models/db');
+const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const postsRoutes = require('./routes/posts');
 const commentsRoutes = require('./routes/comments');
@@ -29,7 +30,8 @@ app.use((_, res, next) => {
     next();
 });
 
-app.use('/api/auth', userRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/user', userRoutes);
 app.use('/api/posts', postsRoutes);
 app.use('/api/comments', commentsRoutes);
 app.use('/api/likes', likesRoutes);

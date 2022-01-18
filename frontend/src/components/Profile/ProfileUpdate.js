@@ -35,7 +35,7 @@ const ProfileUpdate = ({ setInfoMessage }) => {
     }, []);
     
     useEffect(() => {
-        fetch(`/api/auth/${userId}`, {
+        fetch(`/api/user/${userId}`, {
             headers: {
                 'Authorization': localStorage.getItem('token') && localStorage.getItem('token')
             }
@@ -53,7 +53,7 @@ const ProfileUpdate = ({ setInfoMessage }) => {
         e.preventDefault();
         const form = formRef.current;
 
-        fetch(`/api/auth/${user.id}`, {
+        fetch(`/api/user/${user.id}`, {
             headers: {
                 'Authorization': localStorage.getItem('token') && localStorage.getItem('token')
             },
