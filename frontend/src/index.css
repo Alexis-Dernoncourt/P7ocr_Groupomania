@@ -17,10 +17,6 @@ body {
   animation: animationLike .3s ease-out !important;
 }
 
-.unlikeAnim {
-  animation: animationLikeReverse .3s ease-in !important;
-}
-
 .width100vw {
   width: 100vw !important;
 }
@@ -39,37 +35,6 @@ body {
   height: auto;
   object-fit: cover;
   border-radius: 5px;
-}
-
-.infoMessage {
-  max-width: 80vw;
-  width: max-content;
-  font-size: 1.1rem;
-  font-weight: bold;
-  text-align: center;
-  padding: .9rem 1.2rem;
-  border-radius: 4px;
-  background-color: rgba(183, 228, 218, .7);
-  position: fixed;
-  top: 15vh;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 100;
-}
-
-@keyframes animationLikeReverse {
-  0% {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  10% {
-    transform: scale(1.5);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-
-  }
 }
 
 

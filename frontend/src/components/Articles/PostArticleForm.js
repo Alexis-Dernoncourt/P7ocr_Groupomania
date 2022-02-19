@@ -2,12 +2,14 @@ import { useState, useRef } from 'react';
 import { Formik } from 'formik';
 import match from '../../utils/regex';
 import './PostArticleForm.css';
+import { useSelector } from 'react-redux';
+import { useAddOnePostMutation } from '../../redux/apiSlice';
+import toast from 'react-hot-toast';
 
-const PostArticleForm = ({ setInfoMessage, showModal, setShowModal }) => {
-
+const PostArticleForm = ({ showModal, setShowModal }) => {
     const [preview, setPreview] = useState('');
-    const userId = localStorage.getItem('user_id');
-
+    const { userInfos } = useSelector((state) => state.user);
+    const [ addOnePost ] = useAddOnePostMutation();
     const formRef = useRef({});
     const imageInput = useRef(null);
 
@@ -24,33 +26,20 @@ const PostArticleForm = ({ setInfoMessage, showModal, setShowModal }) => {
         imageInput.current.value = "";
     };
 
-    const fetchOnSubmit = (values, { setSubmitting, resetForm }) => {
+    const fetchOnSubmit = async (values, { setSubmitting, resetForm }) => {
         const form = formRef.current;
-        fetch('/api/posts/', {
-            headers: {
-                'Authorization': localStorage.getItem('token') && localStorage.getItem('token')
-            },
-            method: "POST",
-            body: new FormData(form)
-        })
-        .then(data => data.json())
-        .then((response) => {
+        try {
+            const payload = await addOnePost(form).unwrap();
+            console.log(payload);
             setSubmitting(false);
             resetForm();
-            setInfoMessage(response.message);
+            toast.success(payload.message);
             hide();
-        })
-        .catch(error => {
-            const file = imageInput.current.files[0];
-            if (file.size > 8000000) {
-                resetForm();
-                imageInput.current.value = '';
-                setPreview('');
-                setSubmitting(false);
-                setInfoMessage('La taille du fichier est trop grande. L\'image doit être inférieure à 8 Mo.');
-            }
-            console.log('erreur', error);
-        })
+        } catch (error) {
+            console.log(error);
+            toast.error(error.data.message);
+            setSubmitting(false);
+        };
     };
 
     const hide = () => {
@@ -69,10 +58,11 @@ const PostArticleForm = ({ setInfoMessage, showModal, setShowModal }) => {
         }
     };
 
+
     return (
         <div>
             <Formik
-            initialValues={{ user_id: userId, imgLink: '', content: '', file: '', info:'' }}
+            initialValues={{ user_id: userInfos.id, imgLink: '', content: '', file: '', info:'' }}
 
             validate={values => {
                 const errors = {};
@@ -103,7 +93,7 @@ const PostArticleForm = ({ setInfoMessage, showModal, setShowModal }) => {
                         <div className="columns is-full-mobile mx-0 mt-5">
                             <div className="column is-full-mobile is-vcentered has-text-centered px-0">
                                 <div className="formContainer">
-                                    <form onSubmit={handleSubmit} ref={formRef} method="POST">
+                                    <form onSubmit={handleSubmit} ref={formRef} encType="multipart/form-data">
                                         <h2 className='title is-size-5-mobile is-uppercase has-text-link mx-auto'>Ajouter un article</h2>
 
                                         <div className="field">

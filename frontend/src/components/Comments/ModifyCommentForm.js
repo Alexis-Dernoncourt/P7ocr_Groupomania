@@ -1,39 +1,34 @@
 import { useState } from 'react';
 import match from '../../utils/regex';
+import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
+import { useUpdateOneCommentMutation } from '../../redux/apiSlice';
 
-const ModifyCommentForm = ({ commentId, setShowModifyForm, commentToModify, setCommentToModify, arrayOfNewComment, setArrayOfNewComment, setInfoMessage }) => {
-    const token = localStorage.getItem('token');
-    const userId = parseInt(localStorage.getItem('user_id'));
+const ModifyCommentForm = ({ commentId, setShowModifyForm, commentToModify, setCommentToModify }) => {
     const [content, setContent] = useState(commentToModify.content ? commentToModify.content : '');
     const [imgLink, setImgLink] = useState(commentToModify.media ? commentToModify.media : '');
     const [contentError, setContentError] = useState('');
     const [imgLinkError, setImgLinkError] = useState('');
+    const { userInfos } = useSelector((state) => state.user);
+    const [ updateOneComment ] = useUpdateOneCommentMutation();
 
-    const modifyComment = () => {
+    const modifyComment = async () => {
         const body = {
             "content": content,
             "imgLink": imgLink,
-            "userId": userId,
+            "userId": userInfos.id,
         };
 
-        fetch(`/api/comments/${commentId}`, {
-            headers: {
-                'Authorization': token,
-                'Content-Type': 'application/json'
-            },
-            method: "PUT",
-            body: JSON.stringify(body)
-        })
-        .then(response => response.json())
-        .then(postedComment => {
+        try {
+            const payload = await updateOneComment({id: commentId, post: body, postId: commentToModify.postId}).unwrap();
+            toast.success(payload.message);
             setContent('');
             setImgLink('');
-            setArrayOfNewComment([...arrayOfNewComment, content]);
-            setInfoMessage(postedComment.message);
             setCommentToModify({});
             setShowModifyForm(false);
-        })
-        .catch(error => console.log(error))
+        } catch (error) {
+            toast.error(error.data.message);
+        };
     };
 
     const checkValueOfContent = (value) => {

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import SignupForm from '../SignupForm/SignupForm';
 
-const Signup = ({ setInfoMessage }) => {
+const Signup = () => {
 
     useEffect(() => {
         document.title = 'Groupomania - Inscription';
@@ -9,7 +9,7 @@ const Signup = ({ setInfoMessage }) => {
 
     return (
         <div className="container">
-            <SignupForm setInfoMessage={setInfoMessage} />
+            <SignupForm />
         </div>
     )
 }

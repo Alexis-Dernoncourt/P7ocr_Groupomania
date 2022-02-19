@@ -1,15 +1,16 @@
 import { useEffect } from 'react';
 import LoginForm from '../LoginForm/LoginForm';
 
-const Login = ({ infoMessage, setInfoMessage }) => {
+const Login = () => {
 
     useEffect(() => {
         document.title = 'Groupomania - Connexion';
     }, []);
 
+
     return (
         <div className="container">
-            <LoginForm infoMessage={infoMessage} setInfoMessage={setInfoMessage} />
+            <LoginForm />
         </div>
     )
 }

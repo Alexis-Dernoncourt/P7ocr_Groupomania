@@ -1,21 +1,21 @@
-import { useEffect, useContext } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Formik } from 'formik';
 import Form from "./Form";
 import './SignupForm.css';
-import { AuthContext } from "../../context/AuthContext";
 import match from '../../utils/regex';
+import { useSelector} from 'react-redux';
+import toast from 'react-hot-toast';
 
-const SignupForm = ({ setInfoMessage }) => {
-
-    const {auth} = useContext(AuthContext);
+const SignupForm = () => {
+    const { authenticated } = useSelector((state) => state.user);
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (auth) {
+        if (authenticated) {
             navigate('/articles');
         }
-    }, [auth, navigate]);
+    }, [authenticated, navigate]);
 
     const fetchOnSubmit = (values, { setSubmitting, resetForm }) => {
         fetch("/api/auth/signup", {
@@ -28,13 +28,13 @@ const SignupForm = ({ setInfoMessage }) => {
         })
         .then(data => data.json())
         .then((response) => {
-            setInfoMessage(response.message);
+            toast.success(response.message);
             setSubmitting(false);
             resetForm();
             navigate("/login");
         })
         .catch(() => {
-            setInfoMessage('Une erreur est survenue. Veuillez vérifier vos information puis réessayer.');
+            toast.error('Une erreur est survenue. Veuillez vérifier vos information puis réessayer.');
         })
     };
 

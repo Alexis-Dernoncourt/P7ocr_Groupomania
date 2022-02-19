@@ -1,26 +1,22 @@
-import { useEffect, useContext } from "react";
+import { useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Formik } from 'formik';
 import '../SignupForm/SignupForm.css';
-import { AuthContext } from "../../context/AuthContext";
 import match from '../../utils/regex';
+import { useDispatch, useSelector} from 'react-redux';
+import { loginUser } from '../../redux/userSlice';
+import toast from 'react-hot-toast';
 
-const LoginForm = ({ infoMessage, setInfoMessage }) => {
-
-    const {auth, setAuth} = useContext(AuthContext);
+const LoginForm = () => {
     const navigate = useNavigate();
-
-    if (infoMessage) {
-        setTimeout(() => {
-            setInfoMessage(null);
-        }, 5000);
-    };
+    const dispatch = useDispatch();
+    const { authenticated } = useSelector((state) => state.user);
 
     useEffect(() => {
-        if (auth) {
+        if (authenticated) {
             navigate('/profile');
         }
-    }, [auth, navigate]);
+    }, [authenticated, navigate]);
 
     const fetchOnSubmit = (values, { setSubmitting, resetForm }) => {
         fetch("/api/auth/login", {
@@ -34,22 +30,22 @@ const LoginForm = ({ infoMessage, setInfoMessage }) => {
         .then(data => data.json())
         .then(response => {
             if (response.status && response.status === 'error') {
-                setInfoMessage(response.message);
+                toast.error(response.message);
                 setSubmitting(false);
             } else {
-                setInfoMessage(response.message);
                 localStorage.setItem('token', `Bearer ${response.token}`);
                 localStorage.setItem('user_id', response.userId);
+                dispatch(loginUser({ userId: response.userId }));
+                toast(response.message, { position: 'top-right', icon: '👏' });
                 setSubmitting(false);
                 resetForm();
-                if (!auth) {
-                    setAuth(true);
-                    navigate("/profile");
-                }
+                // if (!authenticated) {
+                //     navigate("/profile");
+                // }
             }
         })
         .catch(() => {
-            setInfoMessage('Une erreur est survenue. Veuillez vérifier vos information puis réessayer.');
+            toast.error('Une erreur est survenue. Veuillez vérifier vos information puis réessayer.');
         })
     };
 
@@ -74,7 +70,6 @@ const LoginForm = ({ infoMessage, setInfoMessage }) => {
 
     return (
         <div className='columns is-centered mx-0'>
-        {infoMessage && <div className="infoMessage"><p>{infoMessage}</p></div>}
         <Formik
             initialValues={{ email: '', password: '', info: '' }}
             validate={values => {

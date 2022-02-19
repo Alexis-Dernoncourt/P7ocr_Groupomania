@@ -2,40 +2,20 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import DeleteArticleBtn from '../DeleteArticleBtn/DeleteArticleBtn';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
+import { useGetSignaledPostsQuery, useModerateOnePostMutation } from '../../redux/apiSlice';
+import toast from 'react-hot-toast';
 
-
-const ArticlesToModerateView = ({ infoMessage, setInfoMessage }) => {
-    const [data, setData] = useState(null);
-    const [userRole, setUserRole] = useState('');
-    const [showDeleteArticleConfirmBtn, setShowDeleteArticleConfirmBtn] = useState(false);
-    const [idOfArticleToDelete, setIdOfArticleToDelete] = useState(null);
-    const [arrayOfDeletedPosts, setArrayOfDeletedPosts] = useState([]);
-    const [arrayOfModeratededPosts, setArrayOfModeratededPosts] = useState([]);
-    const token = localStorage.getItem('token');
+const ArticlesToModerateView = () => {
     const location = useLocation();
     const navigate = useNavigate();
+    const [showDeleteArticleConfirmBtn, setShowDeleteArticleConfirmBtn] = useState(false);
+    const [idOfArticleToDelete, setIdOfArticleToDelete] = useState(null);
+    const { data: signaledPosts, isLoading } = useGetSignaledPostsQuery();
+    const [ moderateOnePost ] = useModerateOnePostMutation();
 
     useEffect(() => {
         document.title = 'Groupomania - ADMIN : modération des articles';
     }, []);
-
-    useEffect(() => {
-        fetch(`/api/posts?signaled=true&moderated=false`, {
-            headers: {
-                'Authorization': token
-            }
-        })
-        .then(res => res.json())
-        .then(articles => {
-            setData(articles.posts);
-            setUserRole(articles.user_role);
-            if (articles.message) {
-                setInfoMessage(articles.message);
-                navigate(`/articles`);
-            }
-        })
-        .catch(console.log('Il y a eu une erreur'))
-    }, [token, setInfoMessage, navigate, arrayOfModeratededPosts]);
 
     const handleDelete = (id) => {
         setShowDeleteArticleConfirmBtn(true);
@@ -46,35 +26,27 @@ const ArticlesToModerateView = ({ infoMessage, setInfoMessage }) => {
         navigate(`/article/${id}`);
     };
 
-    const moderatePost = (id) => {
-        fetch(`/api/posts/moderate/${id}`, {
-            headers: {
-                'Authorization': token
-            },
-            method: "POST"
-        })
-        .then(res => res.json())
-        .then(data => {
-            setInfoMessage(data.message);
-            setArrayOfModeratededPosts([...arrayOfModeratededPosts, id]);
-        })
-        .catch(console.log('Il y a eu une erreur'))
-    };
-
-    if (infoMessage) {
-        setTimeout(() => {
-            setInfoMessage(null);
-        }, 5000);
+    const moderatePost = async (id) => {
+        try {
+            const payload = await moderateOnePost(id).unwrap();
+            toast.success(payload.message);
+        } catch (error) {
+            console.log(error);
+            toast.error(error.message);
+        };
     };
 
     return (
-        <div className='container my-6 py-5'>
-            {infoMessage && <div className='infoMessage'><p>{infoMessage}</p></div>}
-        
-            {!data && userRole !== 'moderator' ?
-                <LoadingSpinner />
+        <div className='container my-3 py-5'>       
+            {!signaledPosts || signaledPosts.posts?.length === 0 ?
+                <>
+                { isLoading && <LoadingSpinner /> }
+                <p className='has-text-centered is-size-4 has-text-danger-dark'>
+                    Il n'y a pas d'articles signalés.
+                </p>
+                </>
             :
-                data.map(el => {
+            signaledPosts.posts?.map(el => {
                 return  <div className="columns box is-desktop m-5 card-shadow" key={`${el.createdAt}-${el.id}`}>
                             { el.media &&
                                 <div className="column is-two-fifths is-full-touch">
@@ -118,7 +90,7 @@ const ArticlesToModerateView = ({ infoMessage, setInfoMessage }) => {
                                         </div>
                                         {
                                             showDeleteArticleConfirmBtn &&
-                                                <DeleteArticleBtn post_id={idOfArticleToDelete} showDeleteArticleConfirmBtn={showDeleteArticleConfirmBtn} setShowDeleteArticleConfirmBtn={setShowDeleteArticleConfirmBtn} setIdOfArticleToDelete={setIdOfArticleToDelete} arrayOfDeletedPosts={arrayOfDeletedPosts} setArrayOfDeletedPosts={setArrayOfDeletedPosts} pathToRedirect={location.pathname} setInfoMessage={setInfoMessage}/>
+                                                <DeleteArticleBtn post_id={idOfArticleToDelete} showDeleteArticleConfirmBtn={showDeleteArticleConfirmBtn} setShowDeleteArticleConfirmBtn={setShowDeleteArticleConfirmBtn} setIdOfArticleToDelete={setIdOfArticleToDelete} pathToRedirect={location.pathname} />
                                         }
                                         {
                                             !showDeleteArticleConfirmBtn &&

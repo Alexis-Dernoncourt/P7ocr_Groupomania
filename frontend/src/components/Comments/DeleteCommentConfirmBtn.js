@@ -1,24 +1,23 @@
 import { useNavigate } from "react-router-dom";
+import toast from 'react-hot-toast';
+import { useDeleteOneCommentMutation } from '../../redux/apiSlice';
 
-const DeleteCommentConfirmBtn = ({ comment_id, showDeleteCommentConfirmBtn, setShowDeleteCommentConfirmBtn, arrayOfDeletedComments, setArrayOfDeletedComments, pathToRedirect, setInfoMessage }) => {
-
+const DeleteCommentConfirmBtn = ({ comment_id, showDeleteCommentConfirmBtn, setShowDeleteCommentConfirmBtn, pathToRedirect, refetch }) => {
     const navigate = useNavigate();
+    const [ deleteOneComment ] = useDeleteOneCommentMutation();
 
-    const deleteComment = () => {
-        fetch(`/api/comments/${comment_id}`, {
-            headers: {
-                'Authorization': localStorage.getItem('token') && localStorage.getItem('token')
-            },
-            method: "DELETE"
-        })
-        .then(data => data.json())
-        .then(response => {
-            setArrayOfDeletedComments([...arrayOfDeletedComments, comment_id]);
+    const deleteComment = async () => {
+        try {
+            const payload = await deleteOneComment(comment_id).unwrap();
+            toast.success(payload.message);
+            refetch && refetch();
             setShowDeleteCommentConfirmBtn(false);
             navigate(pathToRedirect);
-            setInfoMessage(response.message);
-        })
-        .catch(error => console.log(error))
+        } catch (error) {
+            console.log(error);
+            console.error('rejected', error.data.error);
+            toast.error(error.data.message);
+        };
     };
 
     const hide = () => {

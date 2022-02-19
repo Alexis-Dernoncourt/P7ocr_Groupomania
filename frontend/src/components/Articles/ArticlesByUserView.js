@@ -2,37 +2,20 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import DeleteArticleBtn from '../DeleteArticleBtn/DeleteArticleBtn';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
+import { useSelector } from 'react-redux';
+import { useGetUserPostsQuery } from '../../redux/apiSlice';
 
-const ArticlesByUserView = ({ infoMessage, setInfoMessage }) => {
-    const [data, setData] = useState(null);
-    const [userRole, setUserRole] = useState('');
+const ArticlesByUserView = () => {
     const [showDeleteArticleConfirmBtn, setShowDeleteArticleConfirmBtn] = useState(false);
     const [idOfArticleToDelete, setIdOfArticleToDelete] = useState(null);
-    const [arrayOfDeletedPosts, setArrayOfDeletedPosts] = useState([]);
-    const token = localStorage.getItem('token');
-    const userId = parseInt(localStorage.getItem('user_id'));
+    const { userInfos } = useSelector((state) => state.user);
+    const { data, isLoading, isError } = useGetUserPostsQuery(userInfos.id);
     const location = useLocation();
     const navigate = useNavigate();
 
     useEffect(() => {
-        let cancel = false;
-        fetch(`/api/posts/user/${userId}`, {
-            headers: {
-                'Authorization': token
-            }
-        })
-        .then(res => res.json())
-        .then(articles => {
-            if (cancel) return;
-            setData(articles.posts);
-            setUserRole(articles.user_role);
-        })
-        .catch(console.log('Il y a eu une erreur'))
-
-        return () => { 
-            cancel = true;
-        }
-    }, [token, userId, idOfArticleToDelete]);
+        document.title = `Groupomania - Votre profil`;
+    }, []);
 
     const handleDelete = (id) => {
         setShowDeleteArticleConfirmBtn(true);
@@ -47,13 +30,20 @@ const ArticlesByUserView = ({ infoMessage, setInfoMessage }) => {
         navigate(`/article/${id}/update`);
     };
 
+    if (isError) {
+        return (
+            <div className='my-6 has-text-centered has-text-danger-dark'>
+                Il y a eu une erreur...
+            </div>
+        )
+    }
+
     return (
         <div className='overflow'>
-            {infoMessage && <div className='infoMessage'><p>{infoMessage}</p></div>}
-            {!data ?
+            {isLoading || !data ?
                 <LoadingSpinner />
             :
-                data.map(el => {
+                data?.posts.map(el => {
                 return  <div className="columns box is-desktop m-5 card-shadow" key={`${el.createdAt}-${el.id}`}>
                             { el.media &&
                                 <div className="column is-two-fifths is-full-touch">
@@ -116,12 +106,12 @@ const ArticlesByUserView = ({ infoMessage, setInfoMessage }) => {
 
                                         {
                                             showDeleteArticleConfirmBtn &&
-                                            (userRole === 'moderator' || el.userId === userId) &&
-                                                <DeleteArticleBtn post_id={idOfArticleToDelete} showDeleteArticleConfirmBtn={showDeleteArticleConfirmBtn} setShowDeleteArticleConfirmBtn={setShowDeleteArticleConfirmBtn} setIdOfArticleToDelete={setIdOfArticleToDelete} arrayOfDeletedPosts={arrayOfDeletedPosts} setArrayOfDeletedPosts={setArrayOfDeletedPosts} pathToRedirect={location.pathname} setInfoMessage={setInfoMessage}/>
+                                            (userInfos.role === 'moderator' || el.userId === userInfos.id) &&
+                                                <DeleteArticleBtn post_id={idOfArticleToDelete} showDeleteArticleConfirmBtn={showDeleteArticleConfirmBtn} setShowDeleteArticleConfirmBtn={setShowDeleteArticleConfirmBtn} setIdOfArticleToDelete={setIdOfArticleToDelete} pathToRedirect={location.pathname} />
                                         }
                                         {
                                             !showDeleteArticleConfirmBtn &&
-                                            (userRole === 'moderator' || el.userId === userId) &&
+                                            (userInfos.role === 'moderator' || el.userId === userInfos.id) &&
                                                 <button onClick={() => handleDelete(el.id)} className='button is-danger is-inverted is-uppercase mt-5'>Supprimer cet article</button>
                                         }
 

@@ -1,38 +1,34 @@
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import match from '../../utils/regex';
+import toast from 'react-hot-toast';
+import { useAddOneCommentMutation } from '../../redux/apiSlice';
 
-const PostCommentForm = ({ postId, arrayOfNewComment, setArrayOfNewComment, setInfoMessage }) => {
-    const token = localStorage.getItem('token');
-    const userId = parseInt(localStorage.getItem('user_id'));
+const PostCommentForm = ({ postId }) => {
+    const { userInfos } = useSelector((state) => state.user);
     const [content, setContent] = useState('');
     const [imgLink, setImgLink] = useState('');
     const [contentError, setContentError] = useState('');
     const [imgLinkError, setImgLinkError] = useState('');
+    const [addOneComment] = useAddOneCommentMutation();
 
-    const postComment = () => {
+    const postComment = async () => {
         const body = {
             "content": content,
             "imgLink": imgLink,
-            "userId": userId,
+            "userId": userInfos.id,
             "postId": postId
         };
 
-        fetch(`/api/comments`, {
-            headers: {
-                'Authorization': token,
-                'Content-Type': 'application/json'
-            },
-            method: "POST",
-            body: JSON.stringify(body)
-        })
-        .then(response => response.json())
-        .then(postedComment => {
+        try {
+            const payload = await addOneComment(body).unwrap();
+            toast.success(payload.message);
             setContent('');
             setImgLink('');
-            setArrayOfNewComment([...arrayOfNewComment, content]);
-            setInfoMessage(postedComment.message);
-        })
-        .catch(error => console.log(error))
+        } catch (error) {
+            console.log(error);
+            toast.error(error.data.message);
+        };
     };
 
     const checkValueOfContent = (value) => {

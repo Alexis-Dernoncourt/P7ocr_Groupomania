@@ -1,21 +1,23 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from "react-router-dom";
+import { useDispatch, useSelector} from 'react-redux';
 import '../SignupForm/SignupForm.css';
 import './Profile.css';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
+import { updateUser } from '../../redux/userSlice';
+import toast from 'react-hot-toast';
 
-const ProfileUpdate = ({ setInfoMessage }) => {
+const ProfileUpdate = () => {
     const navigate = useNavigate();
-    const [user, setUser] = useState({});
     const [firstnameValue, setFirstnameValue] = useState("");
     const [lastnameValue, setLastnameValue] = useState("");
     const [imageValue, setImageValue] = useState("");
     const [selectedImage, setSelectedImage] = useState();
-    const userId = localStorage.getItem('user_id');
+    const dispatch = useDispatch();
+    const { userInfos, pending, fulfilled, error } = useSelector((state) => state.user);
 
     const imageInput = useRef("");
-
     const formRef = useRef({});
-
     const imageChange = () => {
         setImageValue(formRef.current[1].value);
         
@@ -23,7 +25,6 @@ const ProfileUpdate = ({ setInfoMessage }) => {
           setSelectedImage(formRef.current[1].files[0]);
         }
     };
-
     const removeSelectedImage = () => {
         setSelectedImage();
         setImageValue();
@@ -33,43 +34,42 @@ const ProfileUpdate = ({ setInfoMessage }) => {
     useEffect(() => {
         document.title = 'Groupomania - Modification de profil';
     }, []);
-    
+
     useEffect(() => {
-        fetch(`/api/user/${userId}`, {
-            headers: {
-                'Authorization': localStorage.getItem('token') && localStorage.getItem('token')
-            }
-        })
-        .then(res => res.json())
-        .then(data => { 
-            setUser(data.user);
-            setFirstnameValue(data.user.firstName);
-            setLastnameValue(data.user.lastName);
-        })
-        .catch(console.log('erreur'))
-    }, [userId]);
+        if (userInfos) {
+            setFirstnameValue(userInfos.firstName);
+            setLastnameValue(userInfos.lastName);
+        }
+    }, [userInfos]);    
 
     const handleSubmit = (e) => {
         e.preventDefault();
         const form = formRef.current;
 
-        fetch(`/api/user/${user.id}`, {
-            headers: {
-                'Authorization': localStorage.getItem('token') && localStorage.getItem('token')
-            },
-            method: "PUT",
-            body: new FormData(form)
-        })
-        .then(data => data.json())
-        .then((response) => {
-            setInfoMessage(response.message);
+        if (imageValue && formRef.current[1] && formRef.current[1].files[0].size > 1000*1000*8) {
+            toast.error('La taille du fichier pour votre photo de profil doit être inférieure à 8 Mo.', { duration: 6000 });
             navigate("/profile");
-        })
-        .catch(error => {
-            console.log(error);
-        })
-    }
+        } else {
+            const userToUpdate = {
+                id: userInfos.id,
+                firstName: firstnameValue,
+                lastName: lastnameValue,
+                photo: selectedImage ? selectedImage.name : ""
+            };
+    
+            dispatch(updateUser({user: userToUpdate, form: form}));
+            if (fulfilled) {
+                toast.success('Votre profil a bien été modifié');
+                navigate("/profile");
+            };
+        }
+    };
 
+    if (pending) return (
+        <div className="columns is-centered mx-0 mt-5">
+            <LoadingSpinner />
+        </div>
+    )
     
     return (
         <div className="columns is-centered mx-0 mt-5">
@@ -78,7 +78,7 @@ const ProfileUpdate = ({ setInfoMessage }) => {
                     <form onSubmit={handleSubmit} ref={formRef} encType="multipart/form-data">
                         <h2 className='title is-size-5-mobile is-uppercase has-text-link mx-auto'>Modifier votre profil</h2>
 
-                        {user.photo && <div className='mx-auto'><img className="profilePicture" src={user.photo} alt="profile" /></div>}
+                        {userInfos.photo && <div className='mx-auto'><img className="profilePicture" src={userInfos.photo} alt="profile" /></div>}
 
                         <div className="field">
                             <div className="my-4 mx-auto control">
@@ -149,13 +149,14 @@ const ProfileUpdate = ({ setInfoMessage }) => {
                                         type="text"
                                         name="email"
                                         disabled
-                                        placeholder={!user ? "Email" : user.email}
+                                        placeholder={!userInfos ? "Email" : userInfos.email}
                                     />
                             </div>
                         </div>
 
                         <div className='mx-auto'>
-                            <button className="button is-rounded is-primary is-medium is-uppercase my-5" type="submit" disabled={ (firstnameValue === user.firstName && lastnameValue === user.lastName) && !imageValue }>
+                            {error && <p>Il y a eu une erreur.</p>}
+                            <button className="button is-rounded is-primary is-medium is-uppercase my-5" type="submit" disabled={ (firstnameValue === userInfos.firstName && lastnameValue === userInfos.lastName) && !imageValue }>
                                 Modifier
                             </button>
                         </div>

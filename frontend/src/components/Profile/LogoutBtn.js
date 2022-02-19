@@ -1,18 +1,17 @@
-import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
+import { useDispatch } from 'react-redux';
+import { logout } from '../../redux/userSlice';
+import toast from 'react-hot-toast';
+import { persistor } from '../../redux/store';
 
-const LogoutBtn = ({ setInfoMessage }) => {
-
+const LogoutBtn = () => {
     const navigate = useNavigate();
-    const {setAuth} = useContext(AuthContext);
+    const dispatch = useDispatch();
 
     const handleClick = () => {
-        setInfoMessage('Vous êtes déconnecté');
-        localStorage.removeItem('token');
-        localStorage.removeItem('user_id');
-        localStorage.removeItem('expToken');
-        setAuth(false);
+        persistor.purge();
+        dispatch(logout());
+        toast('Vous êtes déconnecté', { position: 'top-right', icon: '👏' });
         navigate("/login");
     };
 

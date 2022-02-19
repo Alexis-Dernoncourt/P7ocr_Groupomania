@@ -34,14 +34,14 @@ exports.updateProfile = (req, res) => {
                     fs.unlink(`images/${currentPhoto}`, () => {
                         User.update({...req.body, photo: imageUrl, updatedAt: Date.now()}, { where: { id: id } })
                         .then(() => {
-                            res.status(200).json({ message: 'Votre profil a bien été modifié' });
+                            res.status(200).json({ user: user, photo: imageUrl, message: 'Votre profil a bien été modifié - 1' });
                         })
                         .catch(error => res.status(401).json({ message: error.message }));
                     })
                 } else {
                     User.update({...req.body, photo: imageUrl, updatedAt: Date.now()}, { where: { id: id } })
                     .then(() => {
-                        res.status(200).json({ message: 'Votre profil a bien été modifié' });
+                        res.status(200).json({ user: user, photo: imageUrl, message: 'Votre profil a bien été modifié - 2' });
                     })
                     .catch(error => res.status(401).json({ message: error.message }));
                 }
@@ -55,7 +55,8 @@ exports.updateProfile = (req, res) => {
 
             
         } else {
-            User.update({...req.body, updatedAt: Date.now()}, { where: { id: id } })
+            console.log(req.body);
+            User.update({ firstName: req.body.firstName, lastName: req.body.lastName, updatedAt: Date.now() }, { where: { id: id } })
             .then(() => {
                 User.findByPk(id)
                 .then(user => {
@@ -69,7 +70,7 @@ exports.updateProfile = (req, res) => {
                 if (error instanceof ValidationError) {
                     return res.status(400).json({message: error.message})
                 }
-                res.status(500).json({ error });
+                res.status(500).json({ error: error.message });
             });
         }
     }

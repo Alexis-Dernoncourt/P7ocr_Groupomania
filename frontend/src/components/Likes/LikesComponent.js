@@ -1,60 +1,23 @@
+import { useAddOneLikeMutation } from '../../redux/apiSlice';
+import { useSelector } from 'react-redux';
 
-const LikesComponent = ({ likes, setLikedPost, setUnlikedPost, postId, setInfoMessage }) => {
-    const userId = parseInt(localStorage.getItem('user_id'));
-    const token = localStorage.getItem('token');
+const LikesComponent = ({ likes, postId }) => {
+    const { userInfos } = useSelector((state) => state.user);
+    const [ addOneLike ] = useAddOneLikeMutation();
+    const userLiked = likes.filter(el => el.userId === userInfos.id);
 
-    const userLiked = likes.filter(el => el.userId === userId);
-    
-    const like = () => {
-        if (userLiked.length > 0) {
-            setUnlikedPost(0);
-            setLikedPost(0);
-            unlikePost();
-        } else {
-            setLikedPost(0);
-            setUnlikedPost(0);
-            likePost();
-        }
-    };
-
-    const unlikePost = () => {
-        fetch(`/api/likes/unlike?post_id=${postId}`, {
-            headers: {
-                'Authorization': token,
-                'Content-Type': 'application/json'
-            },
-            method: "DELETE",
-            body: JSON.stringify({"userId": userId})
-        })
-        .then(res => res.json())
-        .then(unliked => {
-            setUnlikedPost(unliked.id);
-            setInfoMessage(unliked.message);
-        })
-        .catch(error => console.log(error))
-    };
-
-    const likePost = () => {
-        fetch(`/api/likes/like?post_id=${postId}`, {
-            headers: {
-                'Authorization': token,
-                'Content-Type': 'application/json'
-            },
-            method: "POST",
-            body: JSON.stringify({"userId": userId})
-        })
-        .then(res => res.json())
-        .then(postedLike => {
-            setLikedPost(postedLike.id);
-            setInfoMessage(postedLike.message);
-        })
-        .catch(error => console.log(error))
+    const likePost = async () => {
+        try {
+            await addOneLike({postId, userId: userInfos.id}).unwrap();
+        } catch (error) {
+            console.error('rejected', error.data.error);
+        };
     };
 
     
     return (
         <>
-            <span onClick={() => like()} className='like is-clickable'><i className={`${userLiked.length > 0 ? 'fas fa-heart redHeart animationLike' : 'far fa-heart unlikeAnim'}`}></i></span>
+            <span onClick={() => likePost()} className='like is-clickable'><i className={`${userLiked.length > 0 ? 'fas fa-heart redHeart animationLike' : 'far fa-heart'}`}></i></span>
             <span className='totalLikes'>{likes.length}</span>
         </>
     )

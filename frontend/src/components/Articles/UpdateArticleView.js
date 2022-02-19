@@ -2,38 +2,27 @@ import { useState, useRef, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Formik } from 'formik';
 import match from '../../utils/regex';
-//import '../SignupForm/SignupForm.css';
 import './PostArticleForm.css';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
+import { useSelector } from 'react-redux';
+import { useGetOnePostQuery, useUpdateOnePostMutation } from '../../redux/apiSlice';
+import toast from 'react-hot-toast';
 
-const UpdateArticleView = ({ setInfoMessage }) => {
-
+const UpdateArticleView = () => {
     const [preview, setPreview] = useState('');
-    const [article, setArticle] = useState({});
-    const userId = localStorage.getItem('user_id');
+    const { userInfos } = useSelector((state) => state.user);
     const params = useParams();
     const postId = params.id;
-    const navigate = useNavigate();
-
     const formRef = useRef({});
     const imageInput = useRef(null);
+    const navigate = useNavigate();
+    const { data, isLoading, isError } = useGetOnePostQuery(postId);
+    const article = data?.post;
+    const [ updateOnePost, datas ] = useUpdateOnePostMutation();
 
     useEffect(() => {
         document.title = 'Groupomania - Modification de l\'article';
     }, []);
-    
-    useEffect(() => {
-        fetch(`/api/posts/${postId}`, {
-            headers: {
-                'Authorization': localStorage.getItem('token') && localStorage.getItem('token')
-            }
-        })
-        .then(res => res.json())
-        .then(article => { 
-            setArticle(article.post);
-        })
-        .catch(console.log('erreur'))
-    }, [postId]);
 
     const showImage = ( file ) => {
         const reader = new FileReader();
@@ -48,29 +37,23 @@ const UpdateArticleView = ({ setInfoMessage }) => {
         imageInput.current.value = "";
     };
 
-    const fetchOnSubmit = (values, { setSubmitting, resetForm }) => {
+    const updatePost = async (values, { setSubmitting, resetForm }) => {
         const form = formRef.current;
-        fetch(`/api/posts/${params.id}`, {
-            headers: {
-                'Authorization': localStorage.getItem('token') && localStorage.getItem('token')
-            },
-            method: "PUT",
-            body: new FormData(form)
-        })
-        .then(data => data.json())
-        .then((response) => {
+        try {
+            const payload = await updateOnePost({id: parseInt(postId), post: form}).unwrap();
             setSubmitting(false);
             resetForm();
-            setInfoMessage(response.message);
+            toast.success(payload.message);
             hide();
-        })
-        .catch(error => {
-            console.log(error)
-        })
-    };
+        } catch (error) {
+            console.log(error);
+            toast.error(error.data.message);
+            setSubmitting(false);
+        };
+    }
 
     const hide = () => {
-        navigate('/profile');
+        navigate('/articles');
     };
 
     const checkErrors = (values, errors) => {
@@ -88,7 +71,7 @@ const UpdateArticleView = ({ setInfoMessage }) => {
     return (
         <div>
             <Formik
-            initialValues={{ user_id: userId, imgLink: '', content: '', file: '', info:'' }}
+            initialValues={{ user_id: userInfos.id, imgLink: '', content: '', file: '', info:'' }}
 
             validate={values => {
                 const errors = {};
@@ -97,7 +80,7 @@ const UpdateArticleView = ({ setInfoMessage }) => {
             }}
 
             onSubmit={(values, { setSubmitting, resetForm }) => {
-                fetchOnSubmit(values, { setSubmitting, resetForm });
+                updatePost(values, { setSubmitting, resetForm });
             }}
             >
             
@@ -115,7 +98,11 @@ const UpdateArticleView = ({ setInfoMessage }) => {
             }) => (
             <div className={`container is-fluid`}>
                 {
-                !article ?
+                    isError &&
+                    <div className='my-6 has-text-centered has-text-danger-dark'>Il y a eu une erreur...</div>
+                }
+                {
+                isLoading || datas.isLoading ?
                 <div className='my-6'>
                     <LoadingSpinner />
                 </div>
@@ -209,8 +196,8 @@ const UpdateArticleView = ({ setInfoMessage }) => {
                                                         name="content"
                                                         className={`${errors.content && 'errorInput'} textarea-message p-5 is-size-5 has-text-centered`}
                                                         rows="10"
-                                                        placeholder="Votre publication initiale n'a pas de contenu texte. Ajoutez votre message !"
-                                                        value={values.content ? values.content : article.content}
+                                                        placeholder={article.content ? article.content : "Votre publication n'a pas de contenu texte. Ajoutez votre message !"}
+                                                        value={values.content}
                                                         onBlur={handleBlur}
                                                         onChange={handleChange}
                                                     ></textarea>
@@ -221,7 +208,7 @@ const UpdateArticleView = ({ setInfoMessage }) => {
                                         <span className={errors.info ? 'block help is-size-6-desktop errorMsg' : ''}>{errors.info && errors.info}</span>
 
                                         <div className='is-flex is-justify-content-center is-align-items-center is-flex-wrap-wrap mt-5'>
-                                                <button className="button is-rounded is-primary is-medium is-uppercase my-5 mx-3" type='submit' disabled={((values.content === article.content || values.content === '') && values.file === '' && !values.imgLink) || isSubmitting || !isValid}>Publier</button>
+                                                <button className="button is-rounded is-primary is-medium is-uppercase my-5 mx-3" type='submit' disabled={(values.content === article.content && values.file === '' && !values.imgLink) || isSubmitting || !isValid}>Publier</button>
                                             
                                                 <button onClick={hide} className='button is-rounded is-outlined is-link is-medium is-uppercase my-5 mx-3'>Annuler</button>
                                         </div>

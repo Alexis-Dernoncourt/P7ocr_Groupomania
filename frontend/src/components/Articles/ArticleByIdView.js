@@ -5,80 +5,44 @@ import DeleteArticleBtn from '../DeleteArticleBtn/DeleteArticleBtn';
 import PostCommentForm from '../Comments/PostCommentForm';
 import LikesComponent from '../Likes/LikesComponent';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
+import { useGetOnePostQuery, useSignalOnePostMutation, useModerateOnePostMutation } from '../../redux/apiSlice';
+import { useSelector } from 'react-redux';
+import toast from 'react-hot-toast';
 
-const ArticleByIdView = ({ infoMessage, setInfoMessage }) => {
-    const [article, setArticle] = useState(null);
-    const [userRole, setUserRole] = useState('');
+const ArticleByIdView = () => {
     const [showDeleteArticleConfirmBtn, setShowDeleteArticleConfirmBtn] = useState(false);
     const [idOfArticleToDelete, setIdOfArticleToDelete] = useState(null);
-    const [arrayOfSignaledPosts, setArrayOfSignaledPosts] = useState([]);
-    const [arrayOfModeratededPosts, setArrayOfModeratededPosts] = useState([]);
-    const [arrayOfDeletedPosts, setArrayOfDeletedPosts] = useState([]);
-    const [arrayOfNewComment, setArrayOfNewComment] = useState([]);
-    const [arrayOfSignaledComments, setArrayOfSignaledComments] = useState([]);
-    const [arrayOfDeletedComments, setArrayOfDeletedComments] = useState([]);
-    const [likedPost, setLikedPost] = useState(0);
-    const [unlikedPost, setUnlikedPost] = useState(0);
-    const [commentToModify, setCommentToModify] = useState({});
-    const [idOfCommentToDelete, setIdOfCommentToDelete] = useState(null);
-    const token = localStorage.getItem('token');
-    const userId = parseInt(localStorage.getItem('user_id'));
     const params = useParams();
-    const navigate = useNavigate();
     const articleId = params.id;
+    const navigate = useNavigate();
+    const { userInfos } = useSelector((state) => state.user);
+    const { data, isLoading, isError } = useGetOnePostQuery(articleId);
+    const article = data?.post;
+    const [ signalOnePost ] = useSignalOnePostMutation();
+    const [ moderateOnePost ] = useModerateOnePostMutation();
 
     useEffect(() => {
-        let cancel = false;
-        fetch(`/api/posts/${articleId}`, {
-            headers: {
-                'Authorization': token
-            },
-            method: 'GET'
-        })
-        .then(res => res.json())
-        .then(article => {
-            if (cancel) return;
-            if (article.message) {
-                setInfoMessage(article.message);
-            }
-            setArticle(article.post);
-            setUserRole(article.user_role);
-        })
-        .catch(console.log('Il y a eu une erreur'))
+        document.title = `Groupomania - Article ${articleId}`;
+    }, [articleId]);
 
-        return () => { 
-            cancel = true;
-        }
-    }, [token, articleId, setInfoMessage, arrayOfSignaledPosts, arrayOfSignaledComments, arrayOfModeratededPosts, arrayOfDeletedPosts, arrayOfDeletedComments, arrayOfNewComment, likedPost, unlikedPost, commentToModify]);
-
-    const signalPost = (id) => {
-        fetch(`/api/posts/signal/${id}`, {
-            headers: {
-                'Authorization': token
-            },
-            method: "POST"
-        })
-        .then(res => res.json())
-        .then(data => {
-            setInfoMessage(data.message);
-            setArrayOfSignaledPosts([...arrayOfSignaledPosts, id]);
-        })
-        .catch(console.log('Il y a eu une erreur'))
+    const signalPost = async (id) => {
+        try {
+            const payload = await signalOnePost(id).unwrap();
+            toast.success(payload.message);
+        } catch (error) {
+            console.log(error);
+            toast.error(error.data.message);
+        };
     };
 
-    const moderatePost = (id) => {
-        fetch(`/api/posts/moderate/${id}`, {
-            headers: {
-                'Authorization': token
-            },
-            method: "POST"
-        })
-        .then(res => res.json())
-        .then(data => {
-            setArrayOfModeratededPosts([...arrayOfModeratededPosts, id]);
-            setInfoMessage(data.message);
-        })
-        .catch(console.log('Il y a eu une erreur'))
+    const moderatePost = async (id) => {
+        try {
+            const payload = await moderateOnePost(id).unwrap();
+            toast.success(payload.message);
+        } catch (error) {
+            console.log(error);
+            toast.error(error.data.message);
+        };
     };
 
     const handleDelete = (id) => {
@@ -90,18 +54,19 @@ const ArticleByIdView = ({ infoMessage, setInfoMessage }) => {
         navigate(`/article/${id}/update`);
     };
 
-    if (infoMessage) {
-        setTimeout(() => {
-            setInfoMessage(null);
-        }, 5000);
-    };
+    if (isError) {
+        return (
+            <div className='my-6 has-text-centered has-text-danger-dark'>
+                Il y a eu une erreur...
+            </div>
+        )
+    }
 
     return (
         <div className='pt-6'>
             <div className="my-6 is-relative">
-            {infoMessage && <div className='infoMessage'><p>{infoMessage}</p></div>}
             {
-                !article ? 
+                isLoading ? 
                 <div className='my-6'>
                     <LoadingSpinner />
                 </div>
@@ -121,12 +86,12 @@ const ArticleByIdView = ({ infoMessage, setInfoMessage }) => {
                                     { article.content && <p className="is-size-4 p-5 has-text-centered is-size-5-mobile">{article.content}</p> }
                                     </div>
                                     {
-                                    userRole === 'basic' ?
+                                    userInfos.role === 'basic' ?
                                         article.signaled === false ?
-                                            userId !== article.userId &&
+                                            userInfos.id !== article.userId &&
                                             <button className='signalBtn mt-4' onClick={() => signalPost(article.id)}>Signaler la publication</button>
                                         :
-                                            userId !== article.userId &&
+                                            userInfos.id !== article.userId &&
                                             <span className='is-unselectable has-text-danger-dark p-1 ml-auto mx-4 mt-4'>La publication a été signalée</span>
                                     :
                                         article.signaled === true ?
@@ -142,14 +107,14 @@ const ArticleByIdView = ({ infoMessage, setInfoMessage }) => {
                                     }
 
                                     {
-                                        (article.userId === userId) && article.signaled && !article.moderated &&
+                                        (article.userId === userInfos.id) && article.signaled && !article.moderated &&
                                         <div className='is-flex is-flex-direction-column is-align-items-flex-end is-justify-content-center mt-2 mb-5'>
                                             <p className='has-text-danger-dark has-text-weight-medium'>Votre publication a été signalée. Veuillez la modifier avant qu'elle ne soit supprimée.</p>
                                             <button onClick={() => goToUpdateView(article.id)} className='button my-3'>Modifier la publication</button>
                                         </div>
                                     }
                                     {
-                                        (article.userId === userId) && !article.signaled && !article.moderated &&
+                                        (article.userId === userInfos.id) && !article.signaled && !article.moderated &&
                                         <div className='is-flex is-flex-direction-column is-align-items-flex-end is-justify-content-center mt-2 mb-5'>
                                             <button onClick={() => goToUpdateView(article.id)} className='button my-3'>Modifier la publication</button>
                                         </div>
@@ -165,23 +130,23 @@ const ArticleByIdView = ({ infoMessage, setInfoMessage }) => {
                                         
                                     {
                                         showDeleteArticleConfirmBtn &&
-                                        (userRole === 'moderator' || article.userId === userId) &&
-                                            <DeleteArticleBtn post_id={idOfArticleToDelete} showDeleteArticleConfirmBtn={showDeleteArticleConfirmBtn} setShowDeleteArticleConfirmBtn={setShowDeleteArticleConfirmBtn} setIdOfArticleToDelete={setIdOfArticleToDelete} arrayOfDeletedPosts={arrayOfDeletedPosts} setArrayOfDeletedPosts={setArrayOfDeletedPosts} pathToRedirect={'/articles'} setInfoMessage={setInfoMessage}/>
+                                        (userInfos.role === 'moderator' || article.userId === userInfos.id) &&
+                                            <DeleteArticleBtn post_id={idOfArticleToDelete} showDeleteArticleConfirmBtn={showDeleteArticleConfirmBtn} setShowDeleteArticleConfirmBtn={setShowDeleteArticleConfirmBtn} setIdOfArticleToDelete={setIdOfArticleToDelete} pathToRedirect={'/articles'} />
                                     }
                                     {
                                         !showDeleteArticleConfirmBtn &&
-                                        (userRole === 'moderator' || article.userId === userId) &&
+                                        (userInfos.role === 'moderator' || article.userId === userInfos.id) &&
                                             <button onClick={() => handleDelete(article.id)} className='button is-danger is-inverted is-uppercase mt-5'>Supprimer cet article</button>
                                     }
 
                                     <span className='line'></span>
                                     <div className='is-flex is-justify-content-space-between column is-full is-full-mobile p-1'>
                                         <div className='likeContainer is-flex is-justify-content-center is-align-items-center'>
-                                            <LikesComponent likes={article.likes} setLikedPost={setLikedPost} setUnlikedPost={setUnlikedPost} postId={article.id} setInfoMessage={setInfoMessage} />
+                                            <LikesComponent likes={article.likes} postId={article.id} />
                                         </div>
                                         <div className='is-flex is-justify-content-center is-align-items-center m-2'>
                                             <div className='is-flex is-flex-direction-column is-align-items-flex-end'>
-                                                <p className='has-text-weight-bold is-italic m-0'>Par {article.user.firstName} {article.user.lastName}</p>
+                                                <p className='has-text-weight-bold is-italic m-0'>Par { article.userId === userInfos.id ? <span className='is-uppercase has-text-info is-size-5-desktop'>Vous</span> : `${article.user.firstName} ${article.user.lastName}` }</p>
                                             </div>
                                             <img className="roundImg" src={article.user.photo} alt="Auteur de la publication" />
                                         </div>
@@ -199,12 +164,12 @@ const ArticleByIdView = ({ infoMessage, setInfoMessage }) => {
                                             :
                                             <div>
                                                 <p className='is-size-6 is-uppercase has-text-centered pb-5 is-underlined'>Derniers commentaires :</p>
-                                                <CommentsComponent comments={article.comments} arrayOfSignaledComments={arrayOfSignaledComments} setArrayOfSignaledComments={setArrayOfSignaledComments} arrayOfDeletedComments={arrayOfDeletedComments} setArrayOfDeletedComments={setArrayOfDeletedComments} userRole={userRole} arrayOfNewComment={arrayOfNewComment} setArrayOfNewComment={setArrayOfNewComment} commentToModify={commentToModify} setCommentToModify={setCommentToModify} idOfCommentToDelete={idOfCommentToDelete} setIdOfCommentToDelete={setIdOfCommentToDelete} setInfoMessage={setInfoMessage}/>
+                                                <CommentsComponent comments={article.comments} />
                                             </div>
 
                                         }
 
-                                        <PostCommentForm postId={article.id} arrayOfNewComment={arrayOfNewComment} setArrayOfNewComment={setArrayOfNewComment} setInfoMessage={setInfoMessage} />
+                                        <PostCommentForm postId={article.id} />
                                         
                                     </div>
                                 </div>

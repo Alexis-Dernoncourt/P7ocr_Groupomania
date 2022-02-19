@@ -1,26 +1,23 @@
 import { useNavigate } from "react-router-dom";
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
+import { useDeleteOnePostMutation } from '../../redux/apiSlice';
+import toast from 'react-hot-toast';
 
-const DeleteArticleBtn = ({ post_id, showDeleteArticleConfirmBtn, setShowDeleteArticleConfirmBtn, setIdOfArticleToDelete, arrayOfDeletedPosts, setArrayOfDeletedPosts, pathToRedirect, setInfoMessage }) => {
-
+const DeleteArticleBtn = ({ post_id, showDeleteArticleConfirmBtn, setShowDeleteArticleConfirmBtn, setIdOfArticleToDelete, pathToRedirect }) => {
     const navigate = useNavigate();
-
-    const deleteArticle = () => {
-        fetch(`/api/posts/${post_id}`, {
-            headers: {
-                'Authorization': localStorage.getItem('token') && localStorage.getItem('token')
-            },
-            method: "DELETE"
-        })
-        .then(data => data.json())
-        .then(response => {
-            console.log(response);
-            setArrayOfDeletedPosts([...arrayOfDeletedPosts, post_id]);
+    const [ deleteOnePost, data ] = useDeleteOnePostMutation();
+    
+    const deleteArticle = async () => {
+        try {
+            const payload = await deleteOnePost(post_id).unwrap();
+            toast.success(payload.message);
             setShowDeleteArticleConfirmBtn(false);
-            setIdOfArticleToDelete(null);
             navigate(pathToRedirect);
-            setInfoMessage(response.message);
-        })
-        .catch(error => console.log(error))
+        } catch (error) {
+            toast.error(error.data.message);
+            setShowDeleteArticleConfirmBtn(false);
+            navigate(pathToRedirect);
+        }
     };
 
     const hide = () => {
@@ -32,6 +29,9 @@ const DeleteArticleBtn = ({ post_id, showDeleteArticleConfirmBtn, setShowDeleteA
         <div className={`modal ${showDeleteArticleConfirmBtn && 'is-flex'} `}>
             <div className="modal-background"></div>
             <div className={`modal-content ${showDeleteArticleConfirmBtn && 'box has-background-white py-6'} `}>
+                {
+                    data.isLoading && <LoadingSpinner />
+                }
                 <p className="is-size-5 has-text-danger has-text-centered has-text-weight-bold mb-1">Voulez-vous vraiment supprimer cet article ?</p>
                 <p className="is-size-6 has-text-dark has-text-centered has-text-weight-semibold mb-5">Attention : cette action est définitive.</p>
                 <div className="is-flex is-flex-direction-row is-justify-content-center has-text-centered">
